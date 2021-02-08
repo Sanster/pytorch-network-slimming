@@ -1,11 +1,11 @@
 ## Pytorch Network Slimming
 
 This repository contains tools to make implement
-[Learning Efficient Convolutional Networks Through Network Slimming](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html)on different backbones easier.
+[Learning Efficient Convolutional Networks Through Network Slimming](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html) on different backbones easier.
 
 ## Features
 
-- [x] Auto generate pruning schema. Tracker code is inspired by [torch2trt](https://github.com/NVIDIA-AI-IOT/torch2trt)
+- [x] Auto generate pruning schema. [Tracker](https://github.com/Sanster/pytorch-network-slimming/blob/master/src/pns/tracker.py) code is inspired by [torch2trt](https://github.com/NVIDIA-AI-IOT/torch2trt)
 - [x] Channel pruning
 - [x] Save and load pruning result(without pruning schema)
 - [ ] Layer pruning
@@ -91,7 +91,7 @@ python3 train.py \
 
 ## How to use pns in your project
 
-1. Understand the content of this paper [Learning Efficient Convolutional Networks Through Network Slimming](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html)
+1. Understand the content of this paper [Learning Efficient Convolutional Networks Through Network Slimming](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html)，install pns by run `python3 setup.py install`
 2. Refer to the `gen_schema.py` script to generate the pruning schema. You may need to implement your own `build_model` section
 3. Training: call `update_bn_grad` after `loss.backward()`
 
