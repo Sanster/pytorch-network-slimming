@@ -63,7 +63,7 @@ python3 train.py \
 --ckpt_pruned
 ```
 
-## Experiments Result
+## Experiments Result on CIFAR10
 
 - batch_size: 64
 - epochs: 120
