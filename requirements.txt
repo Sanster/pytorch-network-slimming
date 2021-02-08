@@ -1,0 +1,6 @@
+pytorch-lightning==1.1.5
+torch==1.7.0
+torchvision=0.8.0
+pandas==1.0.5
+tabulate
+pytest

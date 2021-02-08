@@ -1,0 +1,317 @@
+{
+  "prefix": "model.",
+  "modules": [
+    {
+      "name": "conv1",
+      "prev_bn": "",
+      "next_bn": "bn1"
+    },
+    {
+      "name": "layer1.0.conv1",
+      "prev_bn": "bn1",
+      "next_bn": "layer1.0.bn1"
+    },
+    {
+      "name": "layer1.0.conv2",
+      "prev_bn": "layer1.0.bn1",
+      "next_bn": "layer1.0.bn2"
+    },
+    {
+      "name": "layer1.0.conv3",
+      "prev_bn": "layer1.0.bn2",
+      "next_bn": "layer1.0.bn3"
+    },
+    {
+      "name": "layer1.0.downsample.0",
+      "prev_bn": "bn1",
+      "next_bn": "layer1.0.downsample.1"
+    },
+    {
+      "name": "layer1.1.conv1",
+      "prev_bn": "layer1.0.bn3",
+      "next_bn": "layer1.1.bn1"
+    },
+    {
+      "name": "layer1.1.conv2",
+      "prev_bn": "layer1.1.bn1",
+      "next_bn": "layer1.1.bn2"
+    },
+    {
+      "name": "layer1.1.conv3",
+      "prev_bn": "layer1.1.bn2",
+      "next_bn": "layer1.1.bn3"
+    },
+    {
+      "name": "layer1.2.conv1",
+      "prev_bn": "layer1.1.bn3",
+      "next_bn": "layer1.2.bn1"
+    },
+    {
+      "name": "layer1.2.conv2",
+      "prev_bn": "layer1.2.bn1",
+      "next_bn": "layer1.2.bn2"
+    },
+    {
+      "name": "layer1.2.conv3",
+      "prev_bn": "layer1.2.bn2",
+      "next_bn": "layer1.2.bn3"
+    },
+    {
+      "name": "layer2.0.conv1",
+      "prev_bn": "layer1.2.bn3",
+      "next_bn": "layer2.0.bn1"
+    },
+    {
+      "name": "layer2.0.conv2",
+      "prev_bn": "layer2.0.bn1",
+      "next_bn": "layer2.0.bn2"
+    },
+    {
+      "name": "layer2.0.conv3",
+      "prev_bn": "layer2.0.bn2",
+      "next_bn": "layer2.0.bn3"
+    },
+    {
+      "name": "layer2.0.downsample.0",
+      "prev_bn": "layer1.2.bn3",
+      "next_bn": "layer2.0.downsample.1"
+    },
+    {
+      "name": "layer2.1.conv1",
+      "prev_bn": "layer2.0.bn3",
+      "next_bn": "layer2.1.bn1"
+    },
+    {
+      "name": "layer2.1.conv2",
+      "prev_bn": "layer2.1.bn1",
+      "next_bn": "layer2.1.bn2"
+    },
+    {
+      "name": "layer2.1.conv3",
+      "prev_bn": "layer2.1.bn2",
+      "next_bn": "layer2.1.bn3"
+    },
+    {
+      "name": "layer2.2.conv1",
+      "prev_bn": "layer2.1.bn3",
+      "next_bn": "layer2.2.bn1"
+    },
+    {
+      "name": "layer2.2.conv2",
+      "prev_bn": "layer2.2.bn1",
+      "next_bn": "layer2.2.bn2"
+    },
+    {
+      "name": "layer2.2.conv3",
+      "prev_bn": "layer2.2.bn2",
+      "next_bn": "layer2.2.bn3"
+    },
+    {
+      "name": "layer2.3.conv1",
+      "prev_bn": "layer2.2.bn3",
+      "next_bn": "layer2.3.bn1"
+    },
+    {
+      "name": "layer2.3.conv2",
+      "prev_bn": "layer2.3.bn1",
+      "next_bn": "layer2.3.bn2"
+    },
+    {
+      "name": "layer2.3.conv3",
+      "prev_bn": "layer2.3.bn2",
+      "next_bn": "layer2.3.bn3"
+    },
+    {
+      "name": "layer3.0.conv1",
+      "prev_bn": "layer2.3.bn3",
+      "next_bn": "layer3.0.bn1"
+    },
+    {
+      "name": "layer3.0.conv2",
+      "prev_bn": "layer3.0.bn1",
+      "next_bn": "layer3.0.bn2"
+    },
+    {
+      "name": "layer3.0.conv3",
+      "prev_bn": "layer3.0.bn2",
+      "next_bn": "layer3.0.bn3"
+    },
+    {
+      "name": "layer3.0.downsample.0",
+      "prev_bn": "layer2.3.bn3",
+      "next_bn": "layer3.0.downsample.1"
+    },
+    {
+      "name": "layer3.1.conv1",
+      "prev_bn": "layer3.0.bn3",
+      "next_bn": "layer3.1.bn1"
+    },
+    {
+      "name": "layer3.1.conv2",
+      "prev_bn": "layer3.1.bn1",
+      "next_bn": "layer3.1.bn2"
+    },
+    {
+      "name": "layer3.1.conv3",
+      "prev_bn": "layer3.1.bn2",
+      "next_bn": "layer3.1.bn3"
+    },
+    {
+      "name": "layer3.2.conv1",
+      "prev_bn": "layer3.1.bn3",
+      "next_bn": "layer3.2.bn1"
+    },
+    {
+      "name": "layer3.2.conv2",
+      "prev_bn": "layer3.2.bn1",
+      "next_bn": "layer3.2.bn2"
+    },
+    {
+      "name": "layer3.2.conv3",
+      "prev_bn": "layer3.2.bn2",
+      "next_bn": "layer3.2.bn3"
+    },
+    {
+      "name": "layer3.3.conv1",
+      "prev_bn": "layer3.2.bn3",
+      "next_bn": "layer3.3.bn1"
+    },
+    {
+      "name": "layer3.3.conv2",
+      "prev_bn": "layer3.3.bn1",
+      "next_bn": "layer3.3.bn2"
+    },
+    {
+      "name": "layer3.3.conv3",
+      "prev_bn": "layer3.3.bn2",
+      "next_bn": "layer3.3.bn3"
+    },
+    {
+      "name": "layer3.4.conv1",
+      "prev_bn": "layer3.3.bn3",
+      "next_bn": "layer3.4.bn1"
+    },
+    {
+      "name": "layer3.4.conv2",
+      "prev_bn": "layer3.4.bn1",
+      "next_bn": "layer3.4.bn2"
+    },
+    {
+      "name": "layer3.4.conv3",
+      "prev_bn": "layer3.4.bn2",
+      "next_bn": "layer3.4.bn3"
+    },
+    {
+      "name": "layer3.5.conv1",
+      "prev_bn": "layer3.4.bn3",
+      "next_bn": "layer3.5.bn1"
+    },
+    {
+      "name": "layer3.5.conv2",
+      "prev_bn": "layer3.5.bn1",
+      "next_bn": "layer3.5.bn2"
+    },
+    {
+      "name": "layer3.5.conv3",
+      "prev_bn": "layer3.5.bn2",
+      "next_bn": "layer3.5.bn3"
+    },
+    {
+      "name": "layer4.0.conv1",
+      "prev_bn": "layer3.5.bn3",
+      "next_bn": "layer4.0.bn1"
+    },
+    {
+      "name": "layer4.0.conv2",
+      "prev_bn": "layer4.0.bn1",
+      "next_bn": "layer4.0.bn2"
+    },
+    {
+      "name": "layer4.0.conv3",
+      "prev_bn": "layer4.0.bn2",
+      "next_bn": "layer4.0.bn3"
+    },
+    {
+      "name": "layer4.0.downsample.0",
+      "prev_bn": "layer3.5.bn3",
+      "next_bn": "layer4.0.downsample.1"
+    },
+    {
+      "name": "layer4.1.conv1",
+      "prev_bn": "layer4.0.bn3",
+      "next_bn": "layer4.1.bn1"
+    },
+    {
+      "name": "layer4.1.conv2",
+      "prev_bn": "layer4.1.bn1",
+      "next_bn": "layer4.1.bn2"
+    },
+    {
+      "name": "layer4.1.conv3",
+      "prev_bn": "layer4.1.bn2",
+      "next_bn": "layer4.1.bn3"
+    },
+    {
+      "name": "layer4.2.conv1",
+      "prev_bn": "layer4.1.bn3",
+      "next_bn": "layer4.2.bn1"
+    },
+    {
+      "name": "layer4.2.conv2",
+      "prev_bn": "layer4.2.bn1",
+      "next_bn": "layer4.2.bn2"
+    },
+    {
+      "name": "layer4.2.conv3",
+      "prev_bn": "layer4.2.bn2",
+      "next_bn": "layer4.2.bn3"
+    },
+    {
+      "name": "fc",
+      "prev_bn": "layer4.2.bn3",
+      "next_bn": ""
+    }
+  ],
+  "shortcuts": [
+    {
+      "names": [
+        "layer1.0.bn3",
+        "layer1.0.downsample.1",
+        "layer1.1.bn3",
+        "layer1.2.bn3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "layer2.0.bn3",
+        "layer2.0.downsample.1",
+        "layer2.1.bn3",
+        "layer2.2.bn3",
+        "layer2.3.bn3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "layer3.0.bn3",
+        "layer3.0.downsample.1",
+        "layer3.1.bn3",
+        "layer3.2.bn3",
+        "layer3.3.bn3",
+        "layer3.4.bn3",
+        "layer3.5.bn3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "layer4.0.bn3",
+        "layer4.0.downsample.1",
+        "layer4.1.bn3",
+        "layer4.2.bn3"
+      ],
+      "method": "or"
+    }
+  ]
+}

@@ -1,0 +1,318 @@
+{
+  "prefix": "model.",
+  "modules": [
+    {
+      "name": "stage0.rbr_dense.conv",
+      "prev_bn": "",
+      "next_bn": "stage0.rbr_dense.bn"
+    },
+    {
+      "name": "stage0.rbr_1x1.conv",
+      "prev_bn": "",
+      "next_bn": "stage0.rbr_1x1.bn"
+    },
+    {
+      "name": "stage1.0.rbr_dense.conv",
+      "prev_bn": "stage0.rbr_dense.bn",
+      "next_bn": "stage1.0.rbr_dense.bn"
+    },
+    {
+      "name": "stage1.0.rbr_1x1.conv",
+      "prev_bn": "stage0.rbr_dense.bn",
+      "next_bn": "stage1.0.rbr_1x1.bn"
+    },
+    {
+      "name": "stage1.1.rbr_dense.conv",
+      "prev_bn": "stage1.0.rbr_dense.bn",
+      "next_bn": "stage1.1.rbr_dense.bn"
+    },
+    {
+      "name": "stage1.1.rbr_1x1.conv",
+      "prev_bn": "stage1.0.rbr_dense.bn",
+      "next_bn": "stage1.1.rbr_1x1.bn"
+    },
+    {
+      "name": "stage2.0.rbr_dense.conv",
+      "prev_bn": "stage1.1.rbr_dense.bn",
+      "next_bn": "stage2.0.rbr_dense.bn"
+    },
+    {
+      "name": "stage2.0.rbr_1x1.conv",
+      "prev_bn": "stage1.1.rbr_dense.bn",
+      "next_bn": "stage2.0.rbr_1x1.bn"
+    },
+    {
+      "name": "stage2.1.rbr_dense.conv",
+      "prev_bn": "stage2.0.rbr_dense.bn",
+      "next_bn": "stage2.1.rbr_dense.bn"
+    },
+    {
+      "name": "stage2.1.rbr_1x1.conv",
+      "prev_bn": "stage2.0.rbr_dense.bn",
+      "next_bn": "stage2.1.rbr_1x1.bn"
+    },
+    {
+      "name": "stage2.2.rbr_dense.conv",
+      "prev_bn": "stage2.1.rbr_dense.bn",
+      "next_bn": "stage2.2.rbr_dense.bn"
+    },
+    {
+      "name": "stage2.2.rbr_1x1.conv",
+      "prev_bn": "stage2.1.rbr_dense.bn",
+      "next_bn": "stage2.2.rbr_1x1.bn"
+    },
+    {
+      "name": "stage2.3.rbr_dense.conv",
+      "prev_bn": "stage2.2.rbr_dense.bn",
+      "next_bn": "stage2.3.rbr_dense.bn"
+    },
+    {
+      "name": "stage2.3.rbr_1x1.conv",
+      "prev_bn": "stage2.2.rbr_dense.bn",
+      "next_bn": "stage2.3.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.0.rbr_dense.conv",
+      "prev_bn": "stage2.3.rbr_dense.bn",
+      "next_bn": "stage3.0.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.0.rbr_1x1.conv",
+      "prev_bn": "stage2.3.rbr_dense.bn",
+      "next_bn": "stage3.0.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.1.rbr_dense.conv",
+      "prev_bn": "stage3.0.rbr_dense.bn",
+      "next_bn": "stage3.1.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.1.rbr_1x1.conv",
+      "prev_bn": "stage3.0.rbr_dense.bn",
+      "next_bn": "stage3.1.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.2.rbr_dense.conv",
+      "prev_bn": "stage3.1.rbr_dense.bn",
+      "next_bn": "stage3.2.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.2.rbr_1x1.conv",
+      "prev_bn": "stage3.1.rbr_dense.bn",
+      "next_bn": "stage3.2.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.3.rbr_dense.conv",
+      "prev_bn": "stage3.2.rbr_dense.bn",
+      "next_bn": "stage3.3.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.3.rbr_1x1.conv",
+      "prev_bn": "stage3.2.rbr_dense.bn",
+      "next_bn": "stage3.3.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.4.rbr_dense.conv",
+      "prev_bn": "stage3.3.rbr_dense.bn",
+      "next_bn": "stage3.4.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.4.rbr_1x1.conv",
+      "prev_bn": "stage3.3.rbr_dense.bn",
+      "next_bn": "stage3.4.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.5.rbr_dense.conv",
+      "prev_bn": "stage3.4.rbr_dense.bn",
+      "next_bn": "stage3.5.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.5.rbr_1x1.conv",
+      "prev_bn": "stage3.4.rbr_dense.bn",
+      "next_bn": "stage3.5.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.6.rbr_dense.conv",
+      "prev_bn": "stage3.5.rbr_dense.bn",
+      "next_bn": "stage3.6.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.6.rbr_1x1.conv",
+      "prev_bn": "stage3.5.rbr_dense.bn",
+      "next_bn": "stage3.6.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.7.rbr_dense.conv",
+      "prev_bn": "stage3.6.rbr_dense.bn",
+      "next_bn": "stage3.7.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.7.rbr_1x1.conv",
+      "prev_bn": "stage3.6.rbr_dense.bn",
+      "next_bn": "stage3.7.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.8.rbr_dense.conv",
+      "prev_bn": "stage3.7.rbr_dense.bn",
+      "next_bn": "stage3.8.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.8.rbr_1x1.conv",
+      "prev_bn": "stage3.7.rbr_dense.bn",
+      "next_bn": "stage3.8.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.9.rbr_dense.conv",
+      "prev_bn": "stage3.8.rbr_dense.bn",
+      "next_bn": "stage3.9.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.9.rbr_1x1.conv",
+      "prev_bn": "stage3.8.rbr_dense.bn",
+      "next_bn": "stage3.9.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.10.rbr_dense.conv",
+      "prev_bn": "stage3.9.rbr_dense.bn",
+      "next_bn": "stage3.10.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.10.rbr_1x1.conv",
+      "prev_bn": "stage3.9.rbr_dense.bn",
+      "next_bn": "stage3.10.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.11.rbr_dense.conv",
+      "prev_bn": "stage3.10.rbr_dense.bn",
+      "next_bn": "stage3.11.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.11.rbr_1x1.conv",
+      "prev_bn": "stage3.10.rbr_dense.bn",
+      "next_bn": "stage3.11.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.12.rbr_dense.conv",
+      "prev_bn": "stage3.11.rbr_dense.bn",
+      "next_bn": "stage3.12.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.12.rbr_1x1.conv",
+      "prev_bn": "stage3.11.rbr_dense.bn",
+      "next_bn": "stage3.12.rbr_1x1.bn"
+    },
+    {
+      "name": "stage3.13.rbr_dense.conv",
+      "prev_bn": "stage3.12.rbr_dense.bn",
+      "next_bn": "stage3.13.rbr_dense.bn"
+    },
+    {
+      "name": "stage3.13.rbr_1x1.conv",
+      "prev_bn": "stage3.12.rbr_dense.bn",
+      "next_bn": "stage3.13.rbr_1x1.bn"
+    },
+    {
+      "name": "stage4.0.rbr_dense.conv",
+      "prev_bn": "stage3.13.rbr_dense.bn",
+      "next_bn": "stage4.0.rbr_dense.bn"
+    },
+    {
+      "name": "stage4.0.rbr_1x1.conv",
+      "prev_bn": "stage3.13.rbr_dense.bn",
+      "next_bn": "stage4.0.rbr_1x1.bn"
+    },
+    {
+      "name": "linear",
+      "prev_bn": "stage4.0.rbr_dense.bn",
+      "next_bn": ""
+    }
+  ],
+  "shortcuts": [
+    {
+      "names": [
+        "stage0.rbr_1x1.bn",
+        "stage0.rbr_dense.bn"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "stage1.0.rbr_1x1.bn",
+        "stage1.0.rbr_dense.bn",
+        "stage1.1.rbr_1x1.bn",
+        "stage1.1.rbr_dense.bn",
+        "stage1.1.rbr_identity"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "stage2.0.rbr_1x1.bn",
+        "stage2.0.rbr_dense.bn",
+        "stage2.1.rbr_1x1.bn",
+        "stage2.1.rbr_dense.bn",
+        "stage2.1.rbr_identity",
+        "stage2.2.rbr_1x1.bn",
+        "stage2.2.rbr_dense.bn",
+        "stage2.2.rbr_identity",
+        "stage2.3.rbr_1x1.bn",
+        "stage2.3.rbr_dense.bn",
+        "stage2.3.rbr_identity"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "stage3.0.rbr_1x1.bn",
+        "stage3.0.rbr_dense.bn",
+        "stage3.1.rbr_1x1.bn",
+        "stage3.1.rbr_dense.bn",
+        "stage3.1.rbr_identity",
+        "stage3.2.rbr_1x1.bn",
+        "stage3.2.rbr_dense.bn",
+        "stage3.2.rbr_identity",
+        "stage3.3.rbr_1x1.bn",
+        "stage3.3.rbr_dense.bn",
+        "stage3.3.rbr_identity",
+        "stage3.4.rbr_1x1.bn",
+        "stage3.4.rbr_dense.bn",
+        "stage3.4.rbr_identity",
+        "stage3.5.rbr_1x1.bn",
+        "stage3.5.rbr_dense.bn",
+        "stage3.5.rbr_identity",
+        "stage3.6.rbr_1x1.bn",
+        "stage3.6.rbr_dense.bn",
+        "stage3.6.rbr_identity",
+        "stage3.7.rbr_1x1.bn",
+        "stage3.7.rbr_dense.bn",
+        "stage3.7.rbr_identity",
+        "stage3.8.rbr_1x1.bn",
+        "stage3.8.rbr_dense.bn",
+        "stage3.8.rbr_identity",
+        "stage3.9.rbr_1x1.bn",
+        "stage3.9.rbr_dense.bn",
+        "stage3.9.rbr_identity",
+        "stage3.10.rbr_1x1.bn",
+        "stage3.10.rbr_dense.bn",
+        "stage3.10.rbr_identity",
+        "stage3.11.rbr_1x1.bn",
+        "stage3.11.rbr_dense.bn",
+        "stage3.11.rbr_identity",
+        "stage3.12.rbr_1x1.bn",
+        "stage3.12.rbr_dense.bn",
+        "stage3.12.rbr_identity",
+        "stage3.13.rbr_1x1.bn",
+        "stage3.13.rbr_dense.bn",
+        "stage3.13.rbr_identity"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "stage4.0.rbr_1x1.bn",
+        "stage4.0.rbr_dense.bn"
+      ],
+      "method": "or"
+    }
+  ]
+}

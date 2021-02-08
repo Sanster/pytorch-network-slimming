@@ -1,0 +1,1 @@
+from .pns import SlimPruner

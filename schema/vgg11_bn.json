@@ -1,0 +1,61 @@
+{
+  "prefix": "model.",
+  "modules": [
+    {
+      "name": "features.0",
+      "prev_bn": "",
+      "next_bn": "features.1"
+    },
+    {
+      "name": "features.4",
+      "prev_bn": "features.1",
+      "next_bn": "features.5"
+    },
+    {
+      "name": "features.8",
+      "prev_bn": "features.5",
+      "next_bn": "features.9"
+    },
+    {
+      "name": "features.11",
+      "prev_bn": "features.9",
+      "next_bn": "features.12"
+    },
+    {
+      "name": "features.15",
+      "prev_bn": "features.12",
+      "next_bn": "features.16"
+    },
+    {
+      "name": "features.18",
+      "prev_bn": "features.16",
+      "next_bn": "features.19"
+    },
+    {
+      "name": "features.22",
+      "prev_bn": "features.19",
+      "next_bn": "features.23"
+    },
+    {
+      "name": "features.25",
+      "prev_bn": "features.23",
+      "next_bn": "features.26"
+    },
+    {
+      "name": "classifier.0",
+      "prev_bn": "features.26",
+      "next_bn": ""
+    },
+    {
+      "name": "classifier.3",
+      "prev_bn": "",
+      "next_bn": ""
+    },
+    {
+      "name": "classifier.6",
+      "prev_bn": "",
+      "next_bn": ""
+    }
+  ],
+  "shortcuts": []
+}
