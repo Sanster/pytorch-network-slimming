@@ -118,6 +118,17 @@ update_bn_grad(model, s=0.0001)
    pruner.pruned_model
    ```
 
+5. Loading pruning result when do forward or pruning again:
+
+```python
+pruner = SlimPruner(restored_model)
+# load pruning_result from some where
+pruning_result: List[Dict]
+pruner.apply_pruning_result(pruning_result)
+# do forward or add update_bn_grad again
+pruner.pruned_model
+```
+
 ## Pruning Schema
 
 ```json
