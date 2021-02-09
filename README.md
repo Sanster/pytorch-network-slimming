@@ -117,7 +117,7 @@ update_bn_grad(model, s=0.0001)
    # fine tune pruned_model
    pruner.pruned_model
    ...
-   # save fine tuned state_dict()
+   # save pruned_model state_dict()
    torch.save(pruner.pruned_model.state_dict())
    ```
 
@@ -129,7 +129,8 @@ pruner = SlimPruner(model)
 # load pruning_result from some where to get a slim network
 pruning_result: List[Dict]
 pruner.apply_pruning_result(pruning_result)
-# load pruned state_dict
+# load pruned state_dict from some where
+pruned_state_dict: Dict
 pruner.pruned_model.load_state_dict(pruned_state_dict)
 # do forward or train with update_bn_grad again
 pruner.pruned_model
