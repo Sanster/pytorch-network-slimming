@@ -116,16 +116,22 @@ update_bn_grad(model, s=0.0001)
    ...
    # fine tune pruned_model
    pruner.pruned_model
+   ...
+   # save fine tuned state_dict()
+   torch.save(pruner.pruned_model.state_dict())
    ```
 
-5. Loading pruning result when do forward or pruning again:
+5. Loading pruning result/params when do forward or pruning again:
 
 ```python
-pruner = SlimPruner(restored_model)
-# load pruning_result from some where
+#  build model
+pruner = SlimPruner(model)
+# load pruning_result from some where to get a slim network
 pruning_result: List[Dict]
 pruner.apply_pruning_result(pruning_result)
-# do forward or add update_bn_grad again
+# load pruned state_dict
+pruner.pruned_model.load_state_dict(pruned_state_dict)
+# do forward or train with update_bn_grad again
 pruner.pruned_model
 ```
 
