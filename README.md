@@ -41,8 +41,7 @@ This repository contains tools to make implement
    --prune_ratio 0.75
    ```
 
-5. After apply Network Slimming, pruning result will be saved in model's `state_dict`.
-   You can load a model with or without apply pruning result.
+5. After apply Network Slimming, pruning result will be saved in checkpoint with `_slim_pruning_result` key and pruned params will be saved in another checkpoint.
 
 Run model without pruning result:
 
@@ -60,7 +59,7 @@ python3 train.py \
 --dataset cifar10 \
 --net resnet18 \
 --ckpt ./output/model_with_pruning_result.ckpt \
---ckpt_pruned
+--ckpt_pruned ./output/pruned_0.75/last.ckpt
 ```
 
 ## Experiments Result on CIFAR10

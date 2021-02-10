@@ -202,8 +202,8 @@ def parse_args():
     )
     parser.add_argument(
         "--ckpt_pruned",
-        action="store_true",
-        help="Try to load pruning result in checkpoint",
+        default=None,
+        help="checkpoint save pruned params",
     )
 
     parser.add_argument("--sparsity_train", action="store_true")
@@ -279,10 +279,14 @@ if __name__ == "__main__":
         model = LitModel.load_from_checkpoint(args.ckpt, args=args)
         if args.ckpt_pruned:
             pruner = SlimPruner(model)
-            print("Load pruning result from model state dict")
+            print(f"Load pruning result from {args.ckpt}")
             checkpoint = torch.load(args.ckpt)
             pruner.apply_pruning_result(checkpoint[SlimPruner.PRUNING_RESULT_KEY])
+
+            print(f"Load pruned params from {args.ckpt_pruned}")
+            pruned_checkpoint = torch.load(args.ckpt_pruned)
             model = pruner.pruned_model
+            model.load_state_dict(pruned_checkpoint['state_dict'])
         trainer.test(model)
         last_model_path = args.ckpt
 
@@ -305,15 +309,13 @@ if __name__ == "__main__":
         f"Save pruning result to model state_dict with {SlimPruner.PRUNING_RESULT_KEY} key"
     )
 
-    if args.ckpt is None:
+    def save_pruning_result(checkpoint):
+        checkpoint[SlimPruner.PRUNING_RESULT_KEY] = pruning_result
 
-        def save_pruning_result(checkpoint):
-            checkpoint[SlimPruner.PRUNING_RESULT_KEY] = pruning_result
-
-        model.on_save_checkpoint = save_pruning_result
-        trainer.save_checkpoint(
-            os.path.join(origin_model_save_dir, "model_with_pruning_result.ckpt")
-        )
+    model.on_save_checkpoint = save_pruning_result
+    trainer.save_checkpoint(
+        os.path.join(origin_model_save_dir, "model_with_pruning_result.ckpt")
+    )
 
     pruned_model = pruner.pruned_model
     pruned_model.is_pruned = True
