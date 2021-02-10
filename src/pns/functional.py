@@ -6,6 +6,8 @@ from torch.nn import BatchNorm2d, Conv2d, Linear
 import numpy as np
 import pandas as pd
 
+# how to change weights.data https://discuss.pytorch.org/t/how-to-delete-every-grad-after-training/63644/8
+
 
 def update_bn_grad(model, s=0.0001):
     """
@@ -42,9 +44,9 @@ def summary_model(
 
 def prune_bn2d(module: BatchNorm2d, keep_idxes):
     module.num_features = len(keep_idxes)
-    module.weight.data = module.weight.data[keep_idxes]
+    module.weight = torch.nn.Parameter(module.weight.data[keep_idxes])
     module.weight.grad = None
-    module.bias.data = module.bias.data[keep_idxes]
+    module.bias = torch.nn.Parameter(module.bias.data[keep_idxes])
     module.bias.grad = None
     module.running_mean = module.running_mean[keep_idxes]
     module.running_var = module.running_var[keep_idxes]
@@ -63,12 +65,12 @@ def prune_conv2d(module: Conv2d, in_keep_idxes=None, out_keep_idxes=None):
     module.out_channels = len(out_keep_idxes)
     module.in_channels = len(in_keep_idxes)
 
-    module.weight.data = module.weight.data[out_keep_idxes, :, :, :]
-    module.weight.data = module.weight.data[:, in_keep_idxes, :, :]
+    module.weight = torch.nn.Parameter(module.weight.data[out_keep_idxes, :, :, :])
+    module.weight = torch.nn.Parameter(module.weight.data[:, in_keep_idxes, :, :])
     module.weight.grad = None
 
     if module.bias is not None:
-        module.bias.data = module.bias.data[out_keep_idxes]
+        module.bias = torch.nn.Parameter(module.bias.data[out_keep_idxes])
         module.bias.grad = None
 
     return in_keep_idxes, out_keep_idxes
@@ -99,7 +101,7 @@ def prune_fc(module: Linear, keep_idxes: List[int], bn_num_channels: int = None)
         keep_idxes = _keep_idxes
 
     module.in_features = len(keep_idxes)
-    module.weight.data = module.weight.data[:, keep_idxes]
+    module.weight = torch.nn.Parameter(module.weight.data[:, keep_idxes])
     module.weight.grad = None
     return keep_idxes
 
