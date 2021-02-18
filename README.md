@@ -88,6 +88,15 @@ python3 train.py \
 - for RepVGG-A0-woid(prune ratio 0.7), fine tune learning rate = 0.001
 - woid：RepVGGBlock without identity layer
 
+Experiments result without sparsity train + prune:
+
+|     | Net      | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Size Reduce |
+| --: | :------- | -------: | ----------: | -------: | ------------: | :----- | :---------- |
+|   0 | resnet18 |        0 |           0 |    93.65 |             0 | 11.2 M |             |
+|   1 | resnet18 |        0 |        0.75 |    91.07 |         -2.58 | 389 K  | 96.52%      |
+
+TODO: Understand why the size of the model is reduced so much?
+
 ## How to use pns in your project
 
 1. Understand the content of this paper [Learning Efficient Convolutional Networks Through Network Slimming](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html)，install pns by run `python3 setup.py install`
