@@ -136,6 +136,10 @@ class BN2dWrapper:
 
         self.keep_idxes = idxes
 
+    def set_fixed_ratio(self, keep_ratio: float = 1):
+        idxes = top_k_idxes(self.module, keep_ratio)
+        self.keep_idxes = idxes
+
     def prune(self):
         assert self.keep_idxes is not None
         prune_bn2d(self.pruned_module, self.keep_idxes)
@@ -179,6 +183,7 @@ class SlimPruner:
             self.bn2d_modules = {}
             self.fc_modules = {}
             self.shortcuts = schema.get("shortcuts", [])
+            self.fixed_bn_ratio = schema.get("fixed_bn_ratio", [])
 
             for name, module in self.pruned_model.named_modules():
                 if isinstance(module, Conv2d):
@@ -228,6 +233,7 @@ class SlimPruner:
         for name, bn2d in self.bn2d_modules.items():
             bn2d.cal_keep_idxes(threshold, min_keep_ratio=0.02)
 
+        self._apply_fix_bn_ratio()
         self._merge_shortcuts()
 
         for bn2d in self.bn2d_modules.values():
@@ -341,3 +347,14 @@ class SlimPruner:
 
             for bn2d in bn2d_layers:
                 bn2d.keep_idxes = merged_idxes
+
+    def _apply_fix_bn_ratio(self):
+        for it in self.fixed_bn_ratio:
+            name = it["name"]
+            ratio = it["ratio"]
+            assert 0 < ratio < 1
+            if isinstance(name, str):
+                name = [name]
+            for _name in name:
+                if _name in self.bn2d_modules:
+                    self.bn2d_modules[_name].set_fixed_ratio(1 - ratio)

@@ -161,6 +161,16 @@ pruner.pruned_model
       "names": ["bn1", "layer1.0.bn2", "layer1.1.bn2"],
       "method": "or"
     }
+  ],
+  "fixed_bn_ratio": [
+    {
+      "name": "name1",
+      "ratio": 0.8
+    },
+    {
+      "name": ["name2"],
+      "ratio": 0.8
+    }
   ]
 }
 ```
@@ -168,3 +178,8 @@ pruner.pruned_model
 - prefix: common prefix added to all module name
 - modules: Conv2d or Linear layers
 - shortcuts: BatchNorm2d Layers
+  - or: All bn layer reserved channels take the merged set
+  - and: All bn layer reserved channels take the intersection set
+- fixed_bn_ratio: BatchNorm2d Layers fix prune percent, will applied before merge shortcuts
+  - name: string or List[string]
+  - ratio: prune ratio

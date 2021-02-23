@@ -1,0 +1,5 @@
+{
+    "modules": [{"name": "conv", "prev_bn": "", "next_bn": "bn"}],
+    "shortcuts": [],
+    "fixed_bn_ratio": [{"name": ["bn"], "ratio": 0.8}]
+}
