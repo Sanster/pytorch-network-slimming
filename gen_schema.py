@@ -4,6 +4,7 @@ import json
 import torch
 
 from backbone.build import build_model
+from pns import SlimPruner
 from pns.tracker import gen_pruning_schema
 from pns.functional import summary_model
 
@@ -11,7 +12,7 @@ from pns.functional import summary_model
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--net", type=str, default="resnet18")
-    parser.add_argument("--prefix", type=str, default="model.")
+    parser.add_argument("--prefix", type=str, default="")
     parser.add_argument(
         "--save_path",
         type=str,
@@ -47,3 +48,19 @@ if __name__ == "__main__":
 
     with open(args.save_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
+
+    try:
+        pruner = SlimPruner(model, args.save_path)
+        pruner.run(0.6)
+        pruner.pruned_model.eval()
+        print("Run forward on pruned model")
+        x = torch.Tensor(1, 3, 224, 224)
+        pruner.pruned_model(x)
+    except Exception as e:
+        import traceback
+
+        traceback.print_exc()
+        exit(-1)
+
+    print("Schema is ok")
+
