@@ -10,7 +10,7 @@ def check_gen_schema(model):
     x = torch.Tensor(1, 3, 224, 224)
     config = gen_pruning_schema(model, x)
 
-    with tempfile.NamedTemporaryFile(mode="w") as f:
+    with open("test.json", 'w') as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
         f.flush()
         pruner = SlimPruner(model, f.name)
