@@ -17,6 +17,7 @@ from backbone.build import build_model
 from pns import SlimPruner
 from pns.functional import update_bn_grad
 
+pl.seed_everything(42)
 
 class LitModel(pl.LightningModule):
     def __init__(self, args):
