@@ -67,3 +67,8 @@ def test_resnet50():
 def test_vgg11_bn():
     name = "vgg11_bn"
     check_schema(name)
+
+
+def test_mobilenet_v2():
+    name = "mobilenet_v2"
+    check_schema(name)

@@ -4,6 +4,7 @@ from typing import Callable, Dict, List
 
 import torch
 
+from pns.functional import is_depthwise_conv2d
 
 TRACK_ATTR_NAME = "_tracker_attr"
 TRACK_ATTR_MODULE_NAME = "_tracker_model_name"
@@ -310,10 +311,13 @@ def track_add(ctx: TrackContext):
 def gen_pruning_schema(model, *args, **kwargs):
     with TrackContext() as ctx:
         bn_names = []
+        depthwise_conv2d_names = []
         for name, module in model.named_modules():
             setattr(module, TRACK_ATTR_MODULE_NAME, name)
             if isinstance(module, torch.nn.BatchNorm2d):
                 bn_names.append(name)
+            if is_depthwise_conv2d(module):
+                depthwise_conv2d_names.append(name)
 
         model(*args, **kwargs)
 
@@ -330,21 +334,22 @@ def gen_pruning_schema(model, *args, **kwargs):
             if name in common_names:
                 target_wrappers[name] = ModuleWrapper(name, module)
 
-        info = {"modules": [], "shortcuts": []}
+        info = {"modules": [], "shortcuts": [], "depthwise_conv_adjacent_bn": []}
         for name, wrapper in target_wrappers.items():
             if not (wrapper.is_conv() or wrapper.is_fc()):
                 continue
-            info["modules"].append(
-                {
-                    "name": name,
-                    "prev_bn": BFS_find_bn(
-                        ctx.module_input_names, target_wrappers, name
-                    ),
-                    "next_bn": BFS_find_bn(
-                        ctx.module_output_names, target_wrappers, name
-                    ),
-                }
-            )
+
+            prev_bn = BFS_find_bn(ctx.module_input_names, target_wrappers, name)
+            next_bn = BFS_find_bn(ctx.module_output_names, target_wrappers, name)
+            m = {"name": name, "prev_bn": prev_bn, "next_bn": next_bn}
+
+            info["modules"].append(m)
+
+            if name in depthwise_conv2d_names:
+                if prev_bn and next_bn:
+                    info["depthwise_conv_adjacent_bn"].append(
+                        {"names": [prev_bn, next_bn], "method": "or"}
+                    )
 
         for shortcuts in ctx.shortcuts_group:
             shortcuts = list(filter(lambda it: it in bn_names, shortcuts))

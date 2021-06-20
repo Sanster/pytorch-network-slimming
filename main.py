@@ -4,6 +4,7 @@ import os
 
 import pytorch_lightning as pl
 import torch
+import numpy as np
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.metrics.functional import accuracy
@@ -18,6 +19,11 @@ from pns import SlimPruner
 from pns.functional import update_bn_grad
 
 pl.seed_everything(42)
+
+
+def is_onnx_model(ckpt: str):
+    return ckpt.endswith(".onnx")
+
 
 class LitModel(pl.LightningModule):
     def __init__(self, args):
@@ -36,12 +42,23 @@ class LitModel(pl.LightningModule):
         self.epochs = args.epochs
         self.save_dir = args.save_dir
         self.prune_ratio = args.prune_ratio
+        self.is_onnx_model = is_onnx_model(args.ckpt)
 
-        self.model = build_model(self.net, num_classes=10)
+        if self.is_onnx_model:
+            import onnxruntime as ort
+
+            self.model = ort.InferenceSession(args.ckpt)
+        else:
+            self.model = build_model(self.net, num_classes=10)
+
         self.is_pruned = False
 
     def forward(self, x):
-        x = self.model(x)
+        if self.is_onnx_model:
+            x = self.model.run(None, {"input": x.cpu().numpy().astype(np.float32)})
+            x = torch.from_numpy(x[0])
+        else:
+            x = self.model(x)
         return F.log_softmax(x, dim=1)
 
     def training_step(self, batch, batch_idx):
@@ -224,6 +241,14 @@ def parse_args():
     parser.add_argument("--prune_ratio", type=float, default=0.75)
     parser.add_argument("--bn_weight_vis_period", type=int, default=30)
 
+    parser.add_argument("--debug", action="store_true", help="limit train/test data")
+
+    parser.add_argument(
+        "--export_onnx_path",
+        default=None,
+        help="ckpt must not be None, if ckpt_pruned is set, pruned model will be exported",
+    )
+
     return parser.parse_args()
 
 
@@ -244,8 +269,32 @@ class TFLogger(TensorBoardLogger):
         super(TensorBoardLogger, self).save()
 
 
+def export_model_to_onnx(model: torch.nn.Module, save_path):
+    print(f"save onnx model to: {save_path}")
+    dummy_input = torch.randn(2, 3, 32, 32)
+
+    input_names = ["input"]
+    output_names = ["output"]
+
+    torch.onnx.export(
+        model,
+        dummy_input,
+        save_path,
+        verbose=False,
+        input_names=input_names,
+        output_names=output_names,
+        opset_version=11,
+        dynamic_axes={"input": [0, 2, 3]},
+    )
+
+
 if __name__ == "__main__":
     args = parse_args()
+
+    if args.export_onnx_path is not None:
+        if args.ckpt is None or not os.path.exists(args.ckpt):
+            print("ckpt must be set when export_onnx_path is not None")
+            exit(-1)
 
     model = LitModel(args)
 
@@ -260,10 +309,11 @@ if __name__ == "__main__":
     )
     trainer = pl.Trainer(
         gpus=1,
-        max_epochs=args.epochs,
+        max_epochs=1 if args.debug else args.epochs,
         check_val_every_n_epoch=10,
         num_sanity_val_steps=0,
-        # limit_train_batches=10,
+        limit_train_batches=10 if args.debug else 1.0,
+        limit_test_batches=10 if args.debug else 1.0,
         benchmark=True,
         callbacks=[
             checkpoint_callback,
@@ -277,24 +327,28 @@ if __name__ == "__main__":
         trainer.test()
         last_model_path = checkpoint_callback.last_model_path
     else:
-        model = LitModel.load_from_checkpoint(args.ckpt, args=args)
-        if args.ckpt_pruned:
-            pruner = SlimPruner(model)
-            print(f"Load pruning result from {args.ckpt}")
-            checkpoint = torch.load(args.ckpt)
-            pruner.apply_pruning_result(checkpoint[SlimPruner.PRUNING_RESULT_KEY])
+        if not is_onnx_model(args.ckpt):
+            model = LitModel.load_from_checkpoint(args.ckpt, args=args)
+            if args.ckpt_pruned:
+                pruner = SlimPruner(model)
+                print(f"Load pruning result from {args.ckpt}")
+                checkpoint = torch.load(args.ckpt)
+                pruner.apply_pruning_result(checkpoint[SlimPruner.PRUNING_RESULT_KEY])
 
-            print(f"Load pruned params from {args.ckpt_pruned}")
-            pruned_checkpoint = torch.load(args.ckpt_pruned)
-            model = pruner.pruned_model
-            model.load_state_dict(pruned_checkpoint['state_dict'])
+                print(f"Load pruned params from {args.ckpt_pruned}")
+                pruned_checkpoint = torch.load(args.ckpt_pruned)
+                model = pruner.pruned_model
+                model.load_state_dict(pruned_checkpoint["state_dict"])
+
+        if args.export_onnx_path:
+            export_model_to_onnx(model.model, save_path=args.export_onnx_path)
+            exit(-1)
+
         trainer.test(model)
         last_model_path = args.ckpt
 
     if not args.fine_tune:
         exit(0)
-
-    origin_model_save_dir = args.save_dir
 
     # start fine tune
     args.learning_rate = args.fine_tune_learning_rate
@@ -315,7 +369,7 @@ if __name__ == "__main__":
 
     model.on_save_checkpoint = save_pruning_result
     trainer.save_checkpoint(
-        os.path.join(origin_model_save_dir, "model_with_pruning_result.ckpt")
+        os.path.join(args.save_dir, "model_with_pruning_result.ckpt")
     )
 
     pruned_model = pruner.pruned_model
@@ -332,10 +386,11 @@ if __name__ == "__main__":
     )
     fine_tune_trainer = pl.Trainer(
         gpus=1,
-        max_epochs=args.fine_tune_epochs,
+        max_epochs=1 if args.debug else args.fine_tune_epochs,
         check_val_every_n_epoch=5,
         num_sanity_val_steps=0,
-        # limit_train_batches=10,
+        limit_train_batches=10 if args.debug else 1.0,
+        limit_test_batches=10 if args.debug else 1.0,
         benchmark=True,
         callbacks=[
             fine_tune_checkpoint_callback,

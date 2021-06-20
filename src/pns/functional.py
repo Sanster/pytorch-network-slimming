@@ -42,6 +42,12 @@ def summary_model(
     print(df.to_markdown())
 
 
+def is_depthwise_conv2d(module: torch.nn.Module) -> bool:
+    if isinstance(module, torch.nn.Conv2d):
+        return module.in_channels == module.out_channels == module.groups
+    return False
+
+
 def prune_bn2d(module: BatchNorm2d, keep_idxes):
     module.num_features = len(keep_idxes)
     module.weight = torch.nn.Parameter(module.weight.data[keep_idxes])
@@ -59,14 +65,28 @@ def prune_conv2d(module: Conv2d, in_keep_idxes=None, out_keep_idxes=None):
     if out_keep_idxes is None:
         out_keep_idxes = list(range(module.weight.shape[0]))
 
-    assert len(in_keep_idxes) <= module.weight.shape[1]
-    assert len(out_keep_idxes) <= module.weight.shape[0]
+    is_depthwise = is_depthwise_conv2d(module)
+
+    if is_depthwise:
+        module.groups = len(in_keep_idxes)
+        assert len(in_keep_idxes) == len(out_keep_idxes)
+    else:
+        assert (
+            len(in_keep_idxes) <= module.weight.shape[1]
+        ), f"len(in_keep_idxes): {len(in_keep_idxes)}, module.weight.shape[1]: {module.weight.shape[1]}"
+
+    assert (
+        len(out_keep_idxes) <= module.weight.shape[0]
+    ), f"len(out_keep_idxes): {len(out_keep_idxes)}, module.weight.shape[0]: {module.weight.shape[0]}"
 
     module.out_channels = len(out_keep_idxes)
     module.in_channels = len(in_keep_idxes)
 
     module.weight = torch.nn.Parameter(module.weight.data[out_keep_idxes, :, :, :])
-    module.weight = torch.nn.Parameter(module.weight.data[:, in_keep_idxes, :, :])
+
+    if not is_depthwise:
+        module.weight = torch.nn.Parameter(module.weight.data[:, in_keep_idxes, :, :])
+
     module.weight.grad = None
 
     if module.bias is not None:

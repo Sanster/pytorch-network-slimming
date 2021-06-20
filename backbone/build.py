@@ -18,6 +18,20 @@ def build_model(net, num_classes=10):
     elif net in ["shufflenet_v2_x1_0", "shufflenet_v2_x1_5", "shufflenet_v2_x2_0"]:
         model = getattr(models, net)(num_classes=num_classes)
         model.maxpool = torch.nn.Identity()
+    elif net in ["mobilenet_v2"]:
+        # to get better result on cifar10
+        inverted_residual_setting = [
+            # t, c, n, s
+            [1, 16, 1, 1],
+            [6, 24, 2, 1],
+            [6, 32, 3, 1],
+            [6, 64, 4, 1],
+            [6, 96, 3, 1],
+            [6, 160, 3, 2],
+            [6, 320, 1, 1],
+        ]
+        model = getattr(models, net)(num_classes=num_classes, inverted_residual_setting=inverted_residual_setting)
+        model.features[0][0].stride = (1, 1)
     else:
         raise NotImplementedError(f"{net}")
 

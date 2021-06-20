@@ -7,10 +7,23 @@ This repository contains tools to make implement
 
 - [x] Auto generate pruning schema. [Tracker](https://github.com/Sanster/pytorch-network-slimming/blob/master/src/pns/tracker.py) code is inspired by [torch2trt](https://github.com/NVIDIA-AI-IOT/torch2trt)
 - [x] Channel pruning
-- [x] Save and load pruning result(without pruning schema)
+- [x] Save and load pruned network graph and params (without pruning schema)
+- [x] Export pruned model to onnx
 - [ ] Layer pruning
 
-## Quick start
+Supported model arches:
+- ResNet
+- RepVGG
+- vgg_bn
+- mobilenet_v2
+
+Supported layers:
+- Conv2d
+- depthwise/pointwise Conv2d
+- Linear
+- BatchNorm2d
+
+## Quick start on cifar10
 
 1. Install pns as a python package: `python3 setup.py develop`
 2. Install `requirements.txt`, this is the dependency needed to train the cifar10 demo,
@@ -25,7 +38,7 @@ This repository contains tools to make implement
 4. Train on cifar10，and do fine tuning after apply Network Slimming.
 
    ```bash
-   python3 train.py \
+   python3 main.py \
    --save_dir output \
    --dataset cifar10 \
    --net resnet18 \
@@ -43,23 +56,32 @@ This repository contains tools to make implement
 
 5. After apply Network Slimming, pruning result will be saved in checkpoint with `_slim_pruning_result` key and pruned params will be saved in another checkpoint.
 
-Run model without pruning result:
+Eval model without pruning result:
 
 ```bash
-python3 train.py \
+python3 main.py \
 --dataset cifar10 \
 --net resnet18 \
---ckpt ./output/model_with_pruning_result.ckpt
+--ckpt ./output/last.ckpt
 ```
 
-Run model with pruning result:
+Eval model with pruning result:
 
 ```bash
-python3 train.py \
+python3 main.py \
 --dataset cifar10 \
 --net resnet18 \
---ckpt ./output/model_with_pruning_result.ckpt \
+--ckpt ./output/pruned_0.75/model_with_pruning_result.ckpt \
 --ckpt_pruned ./output/pruned_0.75/last.ckpt
+```
+
+Export to ONNX
+
+```bash
+python3 main.py \
+--net mobilenet_v2 \
+--ckpt /root/home/code/pytorch-network-slimming/mbv2/mobilenet_v2_s_0.0001/last.ckpt \
+--export_onnx_path /root/home/code/pytorch-network-slimming/mbv2/mobilenet_v2_s_0.0001/last.onnx
 ```
 
 ## Experiments Result on CIFAR10
@@ -70,8 +92,8 @@ python3 train.py \
 - fine tune epochs: 120
 - fine tune learning rate: 0.01
 
-|     | Net            | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Size Reduce |
-| --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- |
+|     | Net            | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Params Reduce | ONNX File size(MB) |
+| --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- | :----------------- |
 |   0 | RepVGG-A0-woid |   0.0001 |           0 |    87.02 |             0 | 7.8 M  |             |
 |   1 | RepVGG-A0-woid |   0.0001 |         0.7 |    86.87 |         -0.15 | 2.5 M  | 68.08%      |
 |   2 | RepVGG-A0-woid |   0.0001 |         0.5 |    88.02 |            +1 | 3.5 M  | 55.07%      |
@@ -84,6 +106,10 @@ python3 train.py \
 |   9 | vgg11_bn       |   0.0001 |           0 |     91.7 |             0 | 128 M  |             |
 |  10 | vgg11_bn       |   0.0001 |        0.75 |    89.85 |         -1.85 | 28.9 M | 77.53%      |
 |  11 | vgg11_bn       |   0.0001 |         0.5 |    91.46 |         -0.24 | 58.5 M | 54.58%      |
+|  12 | mobilenet_v2   |   0.0001 |        0    |    94.52 |         0     | 2.2M   |             | [8.5]() |
+|  13 | mobilenet_v2   |   0.0001 |       0.75  |    91.17 |         -3.35 | 661K   | 70.41%      | [2.6]() |
+|  14 | mobilenet_v2   |   0.00001 |       0    |    94.42 |         0     | 2.2M   |             | [8.5]() |
+|  15 | mobilenet_v2   |   0.00001 |      0.75  |    93.12 |         -1.3  | 597k   | 73.30%      | [2.3]() |
 
 - for RepVGG-A0-woid(prune ratio 0.7), fine tune learning rate = 0.001
 - woid：RepVGGBlock without identity layer
@@ -162,6 +188,12 @@ pruner.pruned_model
       "method": "or"
     }
   ],
+  "depthwise_conv_adjacent_bn": [
+    {
+      "names": ["bn1", "layer1.0.bn2", "layer1.1.bn2"],
+      "method": "or"
+    }
+  ],
   "fixed_bn_ratio": [
     {
       "name": "name1",
@@ -177,9 +209,15 @@ pruner.pruned_model
 
 - prefix: common prefix added to all module name
 - modules: Conv2d or Linear layers
-- shortcuts: BatchNorm2d Layers
+- shortcuts/depthwise_conv_adjacent_bn: BatchNorm2d Layers
   - or: All bn layer reserved channels take the merged set
   - and: All bn layer reserved channels take the intersection set
 - fixed_bn_ratio: BatchNorm2d Layers fix prune percent, will applied before merge shortcuts
   - name: string or List[string]
   - ratio: prune ratio
+
+## Development
+Run test
+```bash
+pytest -v tests
+```

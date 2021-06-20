@@ -1,0 +1,433 @@
+{
+  "modules": [
+    {
+      "name": "features.0.0",
+      "prev_bn": "",
+      "next_bn": "features.0.1"
+    },
+    {
+      "name": "features.1.conv.0.0",
+      "prev_bn": "features.0.1",
+      "next_bn": "features.1.conv.0.1"
+    },
+    {
+      "name": "features.1.conv.1",
+      "prev_bn": "features.1.conv.0.1",
+      "next_bn": "features.1.conv.2"
+    },
+    {
+      "name": "features.2.conv.0.0",
+      "prev_bn": "features.1.conv.2",
+      "next_bn": "features.2.conv.0.1"
+    },
+    {
+      "name": "features.2.conv.1.0",
+      "prev_bn": "features.2.conv.0.1",
+      "next_bn": "features.2.conv.1.1"
+    },
+    {
+      "name": "features.2.conv.2",
+      "prev_bn": "features.2.conv.1.1",
+      "next_bn": "features.2.conv.3"
+    },
+    {
+      "name": "features.3.conv.0.0",
+      "prev_bn": "features.2.conv.3",
+      "next_bn": "features.3.conv.0.1"
+    },
+    {
+      "name": "features.3.conv.1.0",
+      "prev_bn": "features.3.conv.0.1",
+      "next_bn": "features.3.conv.1.1"
+    },
+    {
+      "name": "features.3.conv.2",
+      "prev_bn": "features.3.conv.1.1",
+      "next_bn": "features.3.conv.3"
+    },
+    {
+      "name": "features.4.conv.0.0",
+      "prev_bn": "features.2.conv.3",
+      "next_bn": "features.4.conv.0.1"
+    },
+    {
+      "name": "features.4.conv.1.0",
+      "prev_bn": "features.4.conv.0.1",
+      "next_bn": "features.4.conv.1.1"
+    },
+    {
+      "name": "features.4.conv.2",
+      "prev_bn": "features.4.conv.1.1",
+      "next_bn": "features.4.conv.3"
+    },
+    {
+      "name": "features.5.conv.0.0",
+      "prev_bn": "features.4.conv.3",
+      "next_bn": "features.5.conv.0.1"
+    },
+    {
+      "name": "features.5.conv.1.0",
+      "prev_bn": "features.5.conv.0.1",
+      "next_bn": "features.5.conv.1.1"
+    },
+    {
+      "name": "features.5.conv.2",
+      "prev_bn": "features.5.conv.1.1",
+      "next_bn": "features.5.conv.3"
+    },
+    {
+      "name": "features.6.conv.0.0",
+      "prev_bn": "features.4.conv.3",
+      "next_bn": "features.6.conv.0.1"
+    },
+    {
+      "name": "features.6.conv.1.0",
+      "prev_bn": "features.6.conv.0.1",
+      "next_bn": "features.6.conv.1.1"
+    },
+    {
+      "name": "features.6.conv.2",
+      "prev_bn": "features.6.conv.1.1",
+      "next_bn": "features.6.conv.3"
+    },
+    {
+      "name": "features.7.conv.0.0",
+      "prev_bn": "features.4.conv.3",
+      "next_bn": "features.7.conv.0.1"
+    },
+    {
+      "name": "features.7.conv.1.0",
+      "prev_bn": "features.7.conv.0.1",
+      "next_bn": "features.7.conv.1.1"
+    },
+    {
+      "name": "features.7.conv.2",
+      "prev_bn": "features.7.conv.1.1",
+      "next_bn": "features.7.conv.3"
+    },
+    {
+      "name": "features.8.conv.0.0",
+      "prev_bn": "features.7.conv.3",
+      "next_bn": "features.8.conv.0.1"
+    },
+    {
+      "name": "features.8.conv.1.0",
+      "prev_bn": "features.8.conv.0.1",
+      "next_bn": "features.8.conv.1.1"
+    },
+    {
+      "name": "features.8.conv.2",
+      "prev_bn": "features.8.conv.1.1",
+      "next_bn": "features.8.conv.3"
+    },
+    {
+      "name": "features.9.conv.0.0",
+      "prev_bn": "features.7.conv.3",
+      "next_bn": "features.9.conv.0.1"
+    },
+    {
+      "name": "features.9.conv.1.0",
+      "prev_bn": "features.9.conv.0.1",
+      "next_bn": "features.9.conv.1.1"
+    },
+    {
+      "name": "features.9.conv.2",
+      "prev_bn": "features.9.conv.1.1",
+      "next_bn": "features.9.conv.3"
+    },
+    {
+      "name": "features.10.conv.0.0",
+      "prev_bn": "features.7.conv.3",
+      "next_bn": "features.10.conv.0.1"
+    },
+    {
+      "name": "features.10.conv.1.0",
+      "prev_bn": "features.10.conv.0.1",
+      "next_bn": "features.10.conv.1.1"
+    },
+    {
+      "name": "features.10.conv.2",
+      "prev_bn": "features.10.conv.1.1",
+      "next_bn": "features.10.conv.3"
+    },
+    {
+      "name": "features.11.conv.0.0",
+      "prev_bn": "features.7.conv.3",
+      "next_bn": "features.11.conv.0.1"
+    },
+    {
+      "name": "features.11.conv.1.0",
+      "prev_bn": "features.11.conv.0.1",
+      "next_bn": "features.11.conv.1.1"
+    },
+    {
+      "name": "features.11.conv.2",
+      "prev_bn": "features.11.conv.1.1",
+      "next_bn": "features.11.conv.3"
+    },
+    {
+      "name": "features.12.conv.0.0",
+      "prev_bn": "features.11.conv.3",
+      "next_bn": "features.12.conv.0.1"
+    },
+    {
+      "name": "features.12.conv.1.0",
+      "prev_bn": "features.12.conv.0.1",
+      "next_bn": "features.12.conv.1.1"
+    },
+    {
+      "name": "features.12.conv.2",
+      "prev_bn": "features.12.conv.1.1",
+      "next_bn": "features.12.conv.3"
+    },
+    {
+      "name": "features.13.conv.0.0",
+      "prev_bn": "features.11.conv.3",
+      "next_bn": "features.13.conv.0.1"
+    },
+    {
+      "name": "features.13.conv.1.0",
+      "prev_bn": "features.13.conv.0.1",
+      "next_bn": "features.13.conv.1.1"
+    },
+    {
+      "name": "features.13.conv.2",
+      "prev_bn": "features.13.conv.1.1",
+      "next_bn": "features.13.conv.3"
+    },
+    {
+      "name": "features.14.conv.0.0",
+      "prev_bn": "features.11.conv.3",
+      "next_bn": "features.14.conv.0.1"
+    },
+    {
+      "name": "features.14.conv.1.0",
+      "prev_bn": "features.14.conv.0.1",
+      "next_bn": "features.14.conv.1.1"
+    },
+    {
+      "name": "features.14.conv.2",
+      "prev_bn": "features.14.conv.1.1",
+      "next_bn": "features.14.conv.3"
+    },
+    {
+      "name": "features.15.conv.0.0",
+      "prev_bn": "features.14.conv.3",
+      "next_bn": "features.15.conv.0.1"
+    },
+    {
+      "name": "features.15.conv.1.0",
+      "prev_bn": "features.15.conv.0.1",
+      "next_bn": "features.15.conv.1.1"
+    },
+    {
+      "name": "features.15.conv.2",
+      "prev_bn": "features.15.conv.1.1",
+      "next_bn": "features.15.conv.3"
+    },
+    {
+      "name": "features.16.conv.0.0",
+      "prev_bn": "features.14.conv.3",
+      "next_bn": "features.16.conv.0.1"
+    },
+    {
+      "name": "features.16.conv.1.0",
+      "prev_bn": "features.16.conv.0.1",
+      "next_bn": "features.16.conv.1.1"
+    },
+    {
+      "name": "features.16.conv.2",
+      "prev_bn": "features.16.conv.1.1",
+      "next_bn": "features.16.conv.3"
+    },
+    {
+      "name": "features.17.conv.0.0",
+      "prev_bn": "features.14.conv.3",
+      "next_bn": "features.17.conv.0.1"
+    },
+    {
+      "name": "features.17.conv.1.0",
+      "prev_bn": "features.17.conv.0.1",
+      "next_bn": "features.17.conv.1.1"
+    },
+    {
+      "name": "features.17.conv.2",
+      "prev_bn": "features.17.conv.1.1",
+      "next_bn": "features.17.conv.3"
+    },
+    {
+      "name": "features.18.0",
+      "prev_bn": "features.17.conv.3",
+      "next_bn": "features.18.1"
+    },
+    {
+      "name": "classifier.1",
+      "prev_bn": "features.18.1",
+      "next_bn": ""
+    }
+  ],
+  "shortcuts": [
+    {
+      "names": [
+        "features.2.conv.3",
+        "features.3.conv.3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.4.conv.3",
+        "features.5.conv.3",
+        "features.6.conv.3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.10.conv.3",
+        "features.7.conv.3",
+        "features.8.conv.3",
+        "features.9.conv.3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.11.conv.3",
+        "features.12.conv.3",
+        "features.13.conv.3"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.14.conv.3",
+        "features.15.conv.3",
+        "features.16.conv.3"
+      ],
+      "method": "or"
+    }
+  ],
+  "depthwise_conv_adjacent_bn": [
+    {
+      "names": [
+        "features.0.1",
+        "features.1.conv.0.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.2.conv.0.1",
+        "features.2.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.3.conv.0.1",
+        "features.3.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.4.conv.0.1",
+        "features.4.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.5.conv.0.1",
+        "features.5.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.6.conv.0.1",
+        "features.6.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.7.conv.0.1",
+        "features.7.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.8.conv.0.1",
+        "features.8.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.9.conv.0.1",
+        "features.9.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.10.conv.0.1",
+        "features.10.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.11.conv.0.1",
+        "features.11.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.12.conv.0.1",
+        "features.12.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.13.conv.0.1",
+        "features.13.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.14.conv.0.1",
+        "features.14.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.15.conv.0.1",
+        "features.15.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.16.conv.0.1",
+        "features.16.conv.1.1"
+      ],
+      "method": "or"
+    },
+    {
+      "names": [
+        "features.17.conv.0.1",
+        "features.17.conv.1.1"
+      ],
+      "method": "or"
+    }
+  ],
+  "prefix": "model."
+}

@@ -55,9 +55,9 @@ class Conv2dWrapper:
 
         return {
             "name": self.name,
-            "in channels": f"{pruned_in_channels}/{in_channels}",
-            "out channels": f"{pruned_out_channels}/{out_channels}",
-            "prune percent": f"{100 - (pruned_in_channels*pruned_out_channels)/(in_channels*out_channels)*100:.2f}%",
+            "weight shape": f"[{in_channels},{out_channels}] g={self.module.groups}",
+            "pruned weight shape": f"[{pruned_in_channels},{pruned_out_channels}] g={self.pruned_module.groups}",
+            "prune percent": f"{100 - (pruned_in_channels * pruned_out_channels) / (in_channels * out_channels) * 100:.2f}%",
         }
 
     def prune_result(self):
@@ -183,6 +183,9 @@ class SlimPruner:
             self.bn2d_modules = {}
             self.fc_modules = {}
             self.shortcuts = schema.get("shortcuts", [])
+            self.depthwise_conv_adjacent_bn = schema.get(
+                "depthwise_conv_adjacent_bn", []
+            )
             self.fixed_bn_ratio = schema.get("fixed_bn_ratio", [])
 
             for name, module in self.pruned_model.named_modules():
@@ -221,7 +224,9 @@ class SlimPruner:
             }
         ]
         """
-        for it in config["shortcuts"]:
+        for it in config.get("shortcuts", []):
+            it["names"] = [prefix + _ for _ in it["names"]]
+        for it in config.get("depthwise_conv_adjacent_bn", []):
             it["names"] = [prefix + _ for _ in it["names"]]
 
     def run(self, ratio: float):
@@ -235,6 +240,7 @@ class SlimPruner:
 
         self._apply_fix_bn_ratio()
         self._merge_shortcuts()
+        self._merge_depthwise_conv2d_adjacent_bn()
 
         for bn2d in self.bn2d_modules.values():
             bn2d.prune()
@@ -300,19 +306,31 @@ class SlimPruner:
         # return {self.PRUNING_RESULT_KEY: prune_result}
         return prune_result
 
-    def _merge_shortcuts(self):
-        """
+    def _merge_depthwise_conv2d_adjacent_bn(self):
+        self._align_bns(
+            self.depthwise_conv_adjacent_bn,
+            min_keep_ratio=0.05,
+            log_name="depthwise conv bn",
+        )
 
-        Args:
-            method:
-                and: bn 层的 keep idxes 取交集，剪枝率比 or 大
-                or: bn 层的 keep idxes 取并集
+    def _merge_shortcuts(self):
+        self._align_bns(self.shortcuts, min_keep_ratio=0.05, log_name="shortcuts")
+
+    def _align_bns(self, bn_groups, min_keep_ratio: float, log_name: str):
+        """
+        bn layer is changed inplace
+        [
+            {
+                "names": ["bn1", "bn2"]
+                "method": "or" / "and"
+            }
+        ]
 
         Returns:
 
         """
         merged = []
-        for i, shortcuts in enumerate(self.shortcuts):
+        for i, shortcuts in enumerate(bn_groups):
             assert "method" in shortcuts
             assert shortcuts["method"] in [SHORTCUTS_MERGE_OR, SHORTCUTS_MERGE_AND]
 
@@ -323,7 +341,7 @@ class SlimPruner:
 
             bn2d_layers = []
             bn2d_names = shortcuts["names"]
-            print(f"============shortcuts [{i}]===========")
+            print(f"============{log_name} [{i}]===========")
             for bn2d_name in bn2d_names:
                 assert (
                     bn2d_name in self.bn2d_modules
@@ -346,7 +364,10 @@ class SlimPruner:
             print(f"merged indexes length: {len(merged_idxes)}")
 
             for bn2d in bn2d_layers:
-                bn2d.keep_idxes = merged_idxes
+                _merged_idxes = merged_idxes
+                if len(merged_idxes) == 0:
+                    _merged_idxes = top_k_idxes(bn2d.module, min_keep_ratio)
+                bn2d.keep_idxes = _merged_idxes
 
     def _apply_fix_bn_ratio(self):
         for it in self.fixed_bn_ratio:

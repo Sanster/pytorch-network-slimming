@@ -1,4 +1,4 @@
-models="vgg11_bn resnet18 resnet50 RepVGG-A0-woid"
+models="mobilenet_v2"
 
 # exit when any command fails
 set -e
@@ -16,7 +16,7 @@ output_dir="./output"
 for net in $models; do
   for s in $ss; do
     save_dir=${output_dir}/"${net}_s_${s}"
-    python3 train.py \
+    python3 main.py \
       --save_dir $save_dir \
       --net $net \
       --epoch $epochs \
@@ -26,7 +26,7 @@ for net in $models; do
       --s $s
 
     for prune_ratio in $prune_ratios; do
-      python3 train.py \
+      python3 main.py \
         --save_dir ${save_dir} \
         --net $net \
         --batch_size $batch_size \
