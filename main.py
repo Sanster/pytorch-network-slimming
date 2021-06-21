@@ -43,13 +43,14 @@ class LitModel(pl.LightningModule):
         self.save_dir = args.save_dir
         self.prune_ratio = args.prune_ratio
         self.is_onnx_model = is_onnx_model(args.ckpt)
+        self._device = torch.device(args.device)
 
         if self.is_onnx_model:
             import onnxruntime as ort
 
             self.model = ort.InferenceSession(args.ckpt)
         else:
-            self.model = build_model(self.net, num_classes=10)
+            self.model = build_model(self.net, num_classes=10).to(self._device)
 
         self.is_pruned = False
 
@@ -96,6 +97,10 @@ class LitModel(pl.LightningModule):
         loss = F.nll_loss(logits, y)
         preds = torch.argmax(logits, dim=1)
         acc = accuracy(preds, y)
+
+        if self.is_onnx_model:
+            print(f"test_loss: {loss.item()}, test_acc: {acc.item()}")
+            return
 
         self.log_dict({"test_loss": loss, "test_acc": acc}, prog_bar=True)
         # dump metric
@@ -242,6 +247,7 @@ def parse_args():
     parser.add_argument("--bn_weight_vis_period", type=int, default=30)
 
     parser.add_argument("--debug", action="store_true", help="limit train/test data")
+    parser.add_argument("--device", type=str, default="cuda", choices=["cuda", "cpu"])
 
     parser.add_argument(
         "--export_onnx_path",
@@ -271,7 +277,7 @@ class TFLogger(TensorBoardLogger):
 
 def export_model_to_onnx(model: torch.nn.Module, save_path):
     print(f"save onnx model to: {save_path}")
-    dummy_input = torch.randn(2, 3, 32, 32)
+    dummy_input = torch.randn(2, 3, 32, 32).cuda()
 
     input_names = ["input"]
     output_names = ["output"]
@@ -308,7 +314,7 @@ if __name__ == "__main__":
         # save_weights_only=True,
     )
     trainer = pl.Trainer(
-        gpus=1,
+        gpus=1 if args.device == "cuda" else None,
         max_epochs=1 if args.debug else args.epochs,
         check_val_every_n_epoch=10,
         num_sanity_val_steps=0,
@@ -385,7 +391,7 @@ if __name__ == "__main__":
         # save_weights_only=True,
     )
     fine_tune_trainer = pl.Trainer(
-        gpus=1,
+        gpus=1 if args.device == "cuda" else None,
         max_epochs=1 if args.debug else args.fine_tune_epochs,
         check_val_every_n_epoch=5,
         num_sanity_val_steps=0,

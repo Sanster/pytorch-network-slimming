@@ -75,13 +75,23 @@ python3 main.py \
 --ckpt_pruned ./output/pruned_0.75/last.ckpt
 ```
 
-Export to ONNX
+Export pruned model to ONNX
 
 ```bash
 python3 main.py \
---net mobilenet_v2 \
---ckpt /root/home/code/pytorch-network-slimming/mbv2/mobilenet_v2_s_0.0001/last.ckpt \
---export_onnx_path /root/home/code/pytorch-network-slimming/mbv2/mobilenet_v2_s_0.0001/last.onnx
+--net resnet18 \
+--ckpt ./output/pruned_0.75/model_with_pruning_result.ckpt \
+--ckpt_pruned ./output/pruned_0.75/last.ckpt \
+--export_onnx_path ./output/pruned_0.75/last.onnx
+```
+
+Eval ONNX model(demo script only support CPU)
+```bash
+python3 main.py \
+--dataset cifar10 \
+--net resnet18 \
+--ckpt ./output/pruned_0.75/last.onnx \
+--device cpu
 ```
 
 ## Experiments Result on CIFAR10
@@ -106,10 +116,10 @@ python3 main.py \
 |   9 | vgg11_bn       |   0.0001 |           0 |     91.7 |             0 | 128 M  |             |
 |  10 | vgg11_bn       |   0.0001 |        0.75 |    89.85 |         -1.85 | 28.9 M | 77.53%      |
 |  11 | vgg11_bn       |   0.0001 |         0.5 |    91.46 |         -0.24 | 58.5 M | 54.58%      |
-|  12 | mobilenet_v2   |   0.0001 |        0    |    94.52 |         0     | 2.2M   |             | [8.5]() |
-|  13 | mobilenet_v2   |   0.0001 |       0.75  |    91.17 |         -3.35 | 661K   | 70.41%      | [2.6]() |
-|  14 | mobilenet_v2   |   0.00001 |       0    |    94.42 |         0     | 2.2M   |             | [8.5]() |
-|  15 | mobilenet_v2   |   0.00001 |      0.75  |    93.12 |         -1.3  | 597k   | 73.30%      | [2.3]() |
+|  12 | mobilenet_v2   |   0.0001 |        0    |    94.52 |         0     | 2.2M   |             | [8.5](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.0001.onnx) |
+|  13 | mobilenet_v2   |   0.0001 |       0.75  |    91.17 |         -3.35 | 661K   | 70.41%      | [2.6](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.0001_0.75.onnx) |
+|  14 | mobilenet_v2   |   0.00001 |       0    |    94.42 |         0     | 2.2M   |             | [8.5](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.00001.onnx) |
+|  15 | mobilenet_v2   |   0.00001 |      0.75  |    93.12 |         -1.3  | 597k   | 73.30%      | [2.3](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.00001_0.75.onnx) |
 
 - for RepVGG-A0-woid(prune ratio 0.7), fine tune learning rate = 0.001
 - woid：RepVGGBlock without identity layer
