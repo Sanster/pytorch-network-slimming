@@ -1,6 +1,7 @@
 import torch
 from torchvision import models
 from .repvgg import func_dict as repvgg
+from .mobilenetv3 import mobilenet_v3_small, mobilenet_v3_large
 
 
 def build_model(net, num_classes=10):
@@ -30,8 +31,17 @@ def build_model(net, num_classes=10):
             [6, 160, 3, 2],
             [6, 320, 1, 1],
         ]
-        model = getattr(models, net)(num_classes=num_classes, inverted_residual_setting=inverted_residual_setting)
+        model = getattr(models, net)(
+            num_classes=num_classes, inverted_residual_setting=inverted_residual_setting
+        )
         model.features[0][0].stride = (1, 1)
+    elif net in ["mobilenet_v3_large_nose", "mobilenet_v3_small_nose"]:
+        mbv3 = {
+            "mobilenet_v3_large": mobilenet_v3_large,
+            "mobilenet_v3_small": mobilenet_v3_small,
+        }
+        no_se = True if "nose" in net else False
+        model = mbv3[net.replace("_nose", "")](num_classes=num_classes, no_se=no_se)
     else:
         raise NotImplementedError(f"{net}")
 

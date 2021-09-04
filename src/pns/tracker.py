@@ -70,7 +70,7 @@ class ModuleHook:
         self.method_str = method_str
         self.tracker = tracker
 
-    def _set_method(self, method):
+    def _set_method(self, method: Callable):
         exec("%s = method" % self.method_str)
 
     def __enter__(self):

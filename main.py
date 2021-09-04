@@ -22,6 +22,8 @@ pl.seed_everything(42)
 
 
 def is_onnx_model(ckpt: str):
+    if ckpt is None:
+        return False
     return ckpt.endswith(".onnx")
 
 

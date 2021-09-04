@@ -1,4 +1,4 @@
-models="mobilenet_v2"
+models="mobilenet_v3_large_nose"
 
 # exit when any command fails
 set -e
@@ -16,14 +16,14 @@ output_dir="./output"
 for net in $models; do
   for s in $ss; do
     save_dir=${output_dir}/"${net}_s_${s}"
-    python3 main.py \
-      --save_dir $save_dir \
-      --net $net \
-      --epoch $epochs \
-      --batch_size $batch_size \
-      --learning_rate $learning_rate \
-      --sparsity_train \
-      --s $s
+#    python3 main.py \
+#      --save_dir $save_dir \
+#      --net $net \
+#      --epoch $epochs \
+#      --batch_size $batch_size \
+#      --learning_rate $learning_rate \
+#      --sparsity_train \
+#      --s $s
 
     for prune_ratio in $prune_ratios; do
       python3 main.py \
@@ -36,6 +36,7 @@ for net in $models; do
         --fine_tune_epoch $fine_tune_epochs \
         --fine_tune_learning_rate $fine_tune_learning_rate \
         --prune_ratio $prune_ratio \
+        --device cpu \
         --s $s
     done
   done

@@ -120,9 +120,16 @@ python3 main.py \
 |  13 | mobilenet_v2   |   0.0001 |       0.75  |    91.17 |         -3.35 | 661K   | 70.41%      | [2.6](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.0001_0.75.onnx) |
 |  14 | mobilenet_v2   |   0.00001 |       0    |    94.42 |         0     | 2.2M   |             | [8.5](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.00001.onnx) |
 |  15 | mobilenet_v2   |   0.00001 |      0.75  |    93.12 |         -1.3  | 597k   | 73.30%      | [2.3](https://github.com/Sanster/models/raw/master/pytorch-network-slimming/mobilenet_v2_s_0.00001_0.75.onnx) |
+|  16 | mobilenet_v3_large_nose |     0.0001 |          0    |      92.61 |          0      | 2.7 M    |               |
+|  18 | mobilenet_v3_large_nose |     0.0001 |          0.5  |      93.33 |           +0.72 | 1.9 M    | 30.09%        |
+|  17 | mobilenet_v3_large_nose |     0.0001 |          0.75 |      91.42 |           -1.19 | 1.4 M    | 48.33%        |
+|  19 | mobilenet_v3_small_nose |     0.0001 |          0    |      90.69 |          0      | 1.1 M    |               |
+|  20 | mobilenet_v3_small_nose |     0.0001 |          0.5  |      91.08 |           +0.39 | 777 K    | 27.11%        |
+|  21 | mobilenet_v3_small_nose |     0.0001 |          0.75 |      87.25 |           -3.44 | 564 K    | 47.11%        |
 
 - for RepVGG-A0-woid(prune ratio 0.7), fine tune learning rate = 0.001
 - woid：RepVGGBlock without identity layer
+- nose: MobileNetV3 without SE block(still working on pruning SE block)
 
 Experiments result without sparsity train + prune:
 
