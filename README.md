@@ -16,6 +16,7 @@ Supported model arches:
 - RepVGG
 - vgg_bn
 - mobilenet_v2
+- mobilenet_v3_nose
 
 Supported layers:
 - Conv2d
