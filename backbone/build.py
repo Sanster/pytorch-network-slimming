@@ -35,7 +35,7 @@ def build_model(net, num_classes=10):
             num_classes=num_classes, inverted_residual_setting=inverted_residual_setting
         )
         model.features[0][0].stride = (1, 1)
-    elif net in ["mobilenet_v3_large_nose", "mobilenet_v3_small_nose"]:
+    elif net in ["mobilenet_v3_large", "mobilenet_v3_large_nose", "mobilenet_v3_small_nose"]:
         mbv3 = {
             "mobilenet_v3_large": mobilenet_v3_large,
             "mobilenet_v3_small": mobilenet_v3_small,

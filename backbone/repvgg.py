@@ -178,7 +178,7 @@ class RepVGG(nn.Module):
             in_channels=3,
             out_channels=self.in_planes,
             kernel_size=3,
-            stride=2,
+            stride=1,
             padding=1,
             deploy=self.deploy,
             add_identity=add_identity,
@@ -188,7 +188,7 @@ class RepVGG(nn.Module):
             int(64 * width_multiplier[0]), num_blocks[0], stride=2
         )
         self.stage2 = self._make_stage(
-            int(128 * width_multiplier[1]), num_blocks[1], stride=2
+            int(128 * width_multiplier[1]), num_blocks[1], stride=1
         )
         self.stage3 = self._make_stage(
             int(256 * width_multiplier[2]), num_blocks[2], stride=2

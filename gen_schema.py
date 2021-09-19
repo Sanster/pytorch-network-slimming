@@ -49,6 +49,22 @@ if __name__ == "__main__":
                 last_group = group
         config["shortcuts"] = shortcuts
 
+    if "mobilenet_v3_large" in args.net and "nose" not in args.net:
+        # BN in block with se module should have same channels
+        se_shortcuts = []
+        modules = []
+        for m in config["modules"]:
+            if m["name"].endswith("fc2"):
+                # e.g: features.5.block
+                feature_name = ".".join(m["name"].split(".")[:-2])
+                m["next_bn"] = f"{feature_name}.1.1"
+            elif m["name"].endswith("fc1"):
+                m["next_bn"] = ""
+
+            modules.append(m)
+        # config["shortcuts"].extend(se_shortcuts)
+        config["modules"] = modules
+
     with open(args.save_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2, ensure_ascii=False)
 
@@ -56,6 +72,10 @@ if __name__ == "__main__":
         pruner = SlimPruner(model, args.save_path)
         pruner.run(0.6)
         pruner.pruned_model.eval()
+
+        print("Summary of pruned_model")
+        summary_model(pruner.pruned_model)
+
         print("Run forward on pruned model")
         x = torch.Tensor(1, 3, 224, 224)
         pruner.pruned_model(x)
@@ -66,4 +86,3 @@ if __name__ == "__main__":
         exit(-1)
 
     print("Schema is ok")
-

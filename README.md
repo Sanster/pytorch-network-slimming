@@ -16,11 +16,13 @@ Supported model arches:
 - RepVGG
 - vgg_bn
 - mobilenet_v2
-- mobilenet_v3_nose
+- mobilenet_v3([doc](./docs/mobilenet_v3.md))
+
 
 Supported layers:
 - Conv2d
 - depthwise/pointwise Conv2d
+- SqueezeExcitation(SE block)
 - Linear
 - BatchNorm2d
 
@@ -105,9 +107,9 @@ python3 main.py \
 
 |     | Net            | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Params Reduce | ONNX File size(MB) |
 | --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- | :----------------- |
-|   0 | RepVGG-A0-woid |   0.0001 |           0 |    87.02 |             0 | 7.8 M  |             |
-|   1 | RepVGG-A0-woid |   0.0001 |         0.7 |    86.87 |         -0.15 | 2.5 M  | 68.08%      |
-|   2 | RepVGG-A0-woid |   0.0001 |         0.5 |    88.02 |            +1 | 3.5 M  | 55.07%      |
+|  0 | RepVGG-A0-woid          |     0.0001 |          0    |      93.6  |          0    | 7.8 M    |               |
+|  1 | RepVGG-A0-woid          |     0.0001 |          0.75 |      93.88 |            +0.28 | 2.2 M    | 71.78%        |
+|  2 | RepVGG-A0-woid          |     0.0001 |          0.5  |      93.86 |            +0.26 | 3.8 M    | 52.14%        |
 |   3 | resnet18       |   0.0001 |           0 |    94.48 |             0 | 11.2 M |             |
 |   4 | resnet18       |   0.0001 |        0.75 |    94.14 |         -0.34 | 4.5 M  | 59.29%      |
 |   5 | resnet18       |   0.0001 |         0.5 |     94.8 |         +0.32 | 3.5 M  | 68.83%      |
@@ -127,10 +129,15 @@ python3 main.py \
 |  19 | mobilenet_v3_small_nose |     0.0001 |          0    |      90.69 |          0      | 1.1 M    |               |
 |  20 | mobilenet_v3_small_nose |     0.0001 |          0.5  |      91.08 |           +0.39 | 777 K    | 27.11%        |
 |  21 | mobilenet_v3_small_nose |     0.0001 |          0.75 |      87.25 |           -3.44 | 564 K    | 47.11%        |
+|  22 | mobilenet_v3_large      |     0.0001 |          0    |      92.96 |          0      | 4.2 M    |               |
+|  23 | mobilenet_v3_large      |     0.0001 |          0.75 |      92.18 |           -0.78 | 1.6 M    | 63.12%        |
+|  24 | mobilenet_v3_large      |     0.0001 |          0.5  |      92.87 |           -0.09 | 2.3 M    | 45.57%        |
+
+
 
 - for RepVGG-A0-woid(prune ratio 0.7), fine tune learning rate = 0.001
 - woid：RepVGGBlock without identity layer
-- nose: MobileNetV3 without SE block(still working on pruning SE block)
+- nose: MobileNetV3 without SE block
 
 Experiments result without sparsity train + prune:
 

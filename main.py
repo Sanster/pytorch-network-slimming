@@ -16,7 +16,7 @@ from torchvision.datasets import MNIST, CIFAR10
 
 from backbone.build import build_model
 from pns import SlimPruner
-from pns.functional import update_bn_grad
+from pns.functional import update_bn_grad, summary_model
 
 pl.seed_everything(42)
 
@@ -367,6 +367,9 @@ if __name__ == "__main__":
 
     pruner = SlimPruner(restored_model, args.prune_schema)
     pruning_result = pruner.run(args.prune_ratio)
+
+    print("Summary of pruned_model")
+    summary_model(pruner.pruned_model)
 
     print(
         f"Save pruning result to model state_dict with {SlimPruner.PRUNING_RESULT_KEY} key"
