@@ -239,8 +239,31 @@ class SlimPruner:
             bn2d.cal_keep_idxes(threshold, min_keep_ratio=0.02)
 
         self._apply_fix_bn_ratio()
-        self._merge_shortcuts()
-        self._merge_depthwise_conv2d_adjacent_bn()
+
+        bns_should_be_aligned = copy.deepcopy(self.shortcuts)
+        remin_depthwise_conv_adjacent_bn = []
+        for item1 in self.depthwise_conv_adjacent_bn:
+            """{
+                "names": ["bn1", "bn2"]
+                "method": "or" / "and"
+            }
+            """
+            _merged = False
+            for item2 in bns_should_be_aligned:
+                if len(set(item1["names"]) & set(item2["names"])) != 0:
+                    item2["names"].extend(item1["names"])
+                    item2["names"] = list(set(item2["names"]))
+                    _merged = True
+                    # TODO: handle "method"
+                    break
+
+            if not _merged:
+                remin_depthwise_conv_adjacent_bn.append(item1)
+
+        bns_should_be_aligned.extend(remin_depthwise_conv_adjacent_bn)
+        self._align_bns(
+            bns_should_be_aligned, min_keep_ratio=0.05, log_name="shortcuts"
+        )
 
         for bn2d in self.bn2d_modules.values():
             bn2d.prune()
