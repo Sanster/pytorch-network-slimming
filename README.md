@@ -9,6 +9,7 @@ This repository contains tools to make implement
 - [x] Channel pruning
 - [x] Save and load pruned network graph and params (without pruning schema)
 - [x] Export pruned model to onnx
+- [ ] Remain channels 8x (for train/infer speed)  
 - [ ] Layer pruning
 
 Supported model arches:
