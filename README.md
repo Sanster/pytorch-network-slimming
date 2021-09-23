@@ -9,7 +9,7 @@ This repository contains tools to make implement
 - [x] Channel pruning
 - [x] Save and load pruned network graph and params (without pruning schema)
 - [x] Export pruned model to onnx
-- [ ] Remain channels 8x (for train/infer speed)  
+- [x] Channels round up to 8x (for train/infer speed) (TODO: handle shortcuts channels round up)
 - [ ] Layer pruning
 
 Supported model arches:
@@ -98,6 +98,13 @@ python3 main.py \
 --device cpu
 ```
 
+Benchmark onnx model performance
+```bash
+python3 benchmark.py \
+/path/to/onnx_model1.onnx \
+/path/to/onnx_model2.onnx
+```
+
 ## Experiments Result on CIFAR10
 
 - batch_size: 64
@@ -105,9 +112,10 @@ python3 main.py \
 - learning rate: 0.01
 - fine tune epochs: 120
 - fine tune learning rate: 0.01
+- onnx latency: input shape=1x3x224x224, OMP_NUM_THREADS=4, cpu=Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz
 
-|     | Net            | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Params Reduce | ONNX File size(MB) |
-| --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- | :----------------- |
+|     | Net            | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Params Reduce | ONNX File size(MB) | ONNX Latency | ONNX Memory |
+| --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- | :----------------- | -------------------|
 |  0 | RepVGG-A0-woid          |     0.0001 |          0    |      93.6  |          0    | 7.8 M    |               |
 |  1 | RepVGG-A0-woid          |     0.0001 |          0.75 |      93.88 |            +0.28 | 2.2 M    | 71.78%        |
 |  2 | RepVGG-A0-woid          |     0.0001 |          0.5  |      93.86 |            +0.26 | 3.8 M    | 52.14%        |
@@ -130,9 +138,9 @@ python3 main.py \
 |  19 | mobilenet_v3_small_nose |     0.0001 |          0    |      90.69 |          0      | 1.1 M    |               |
 |  20 | mobilenet_v3_small_nose |     0.0001 |          0.5  |      91.08 |           +0.39 | 777 K    | 27.11%        |
 |  21 | mobilenet_v3_small_nose |     0.0001 |          0.75 |      87.25 |           -3.44 | 564 K    | 47.11%        |
-|  22 | mobilenet_v3_large      |     0.0001 |          0    |      92.96 |          0      | 4.2 M    |               |
-|  23 | mobilenet_v3_large      |     0.0001 |          0.75 |      92.18 |           -0.78 | 1.6 M    | 63.12%        |
-|  24 | mobilenet_v3_large      |     0.0001 |          0.5  |      92.87 |           -0.09 | 2.3 M    | 45.57%        |
+|  22 | mobilenet_v3_large      |     0.0001 |          0    |      92.96 |          0      | 4.2 M    |               | [16](https://github.com/Sanster/models/blob/master/pytorch-network-slimming/mobilenet_v3_large_s_0.0001.onnx)  | 100ms | 165mb |
+|  23 | mobilenet_v3_large      |     0.0001 |          0.75 |      92.18 |           -0.78 | 1.6 M    | 63.12%        | [5.9](https://github.com/Sanster/models/blob/master/pytorch-network-slimming/mobilenet_v3_large_s_0.0001_0.75.onnx) | 65ms | 151mb |
+|  24 | mobilenet_v3_large      |     0.0001 |          0.5  |      92.87 |           -0.09 | 2.3 M    | 45.57%        | [8.7](https://github.com/Sanster/models/blob/master/pytorch-network-slimming/mobilenet_v3_large_s_0.0001_0.5.onnx) | 81ms | 123mb |
 
 
 
@@ -201,6 +209,7 @@ pruner.pruned_model
 ```json
 {
   "prefix": "model.",
+  "channel_rounding": "eight",
   "modules": [
     {
       "name": "conv1",
@@ -234,6 +243,7 @@ pruner.pruned_model
 ```
 
 - prefix: common prefix added to all module name
+- channel_rounding: none/eight/two_pow
 - modules: Conv2d or Linear layers
 - shortcuts/depthwise_conv_adjacent_bn: BatchNorm2d Layers
   - or: All bn layer reserved channels take the merged set
