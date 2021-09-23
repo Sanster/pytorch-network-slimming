@@ -115,7 +115,7 @@ python3 benchmark.py \
 - onnx latency: input shape=1x3x224x224, OMP_NUM_THREADS=4, cpu=Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz
 
 |     | Net            | Sparsity | Prune Ratio | Test Acc | Test Acc Diff | Params | Params Reduce | ONNX File size(MB) | ONNX Latency | ONNX Memory |
-| --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- | :----------------- | -------------------|
+| --: | :------------- | -------: | ----------: | -------: | ------------: | :----- | :---------- | :----------------- | :-------------------| :----|
 |  0 | RepVGG-A0-woid          |     0.0001 |          0    |      93.6  |          0    | 7.8 M    |               |
 |  1 | RepVGG-A0-woid          |     0.0001 |          0.75 |      93.88 |            +0.28 | 2.2 M    | 71.78%        |
 |  2 | RepVGG-A0-woid          |     0.0001 |          0.5  |      93.86 |            +0.26 | 3.8 M    | 52.14%        |
