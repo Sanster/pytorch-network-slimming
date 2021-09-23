@@ -1,11 +1,11 @@
 import copy
 import json
+from enum import Enum
 from functools import reduce
 from itertools import chain
 from typing import Dict, List
 
 import pandas as pd
-import torch
 from torch.nn import Conv2d, BatchNorm2d, Linear
 
 from .functional import (
@@ -15,10 +15,18 @@ from .functional import (
     prune_conv2d,
     prune_fc,
     prune_bn2d,
+    ceil,
+    round_up_to_power_of_2,
 )
 
 SHORTCUTS_MERGE_OR = "or"
 SHORTCUTS_MERGE_AND = "and"
+
+
+class ChannelRounding(Enum):
+    NONE = "none"
+    EIGHT = "eight"  # 8 的倍数
+    TWO_POW = "two_pow"  # 2^n
 
 
 class Conv2dWrapper:
@@ -121,7 +129,12 @@ class BN2dWrapper:
     def in_channels(self) -> int:
         return self.module.num_features
 
-    def cal_keep_idxes(self, threshold: float, min_keep_ratio: float = 0):
+    def cal_keep_idxes(
+        self,
+        threshold: float,
+        min_keep_ratio: float = 0,
+        channel_rounding: ChannelRounding = ChannelRounding.NONE,
+    ):
         """
         根据所有 BatchNorm2d 层的 gamma 系计算每层 bn 的 keep_idxes
         """
@@ -133,6 +146,17 @@ class BN2dWrapper:
                 raise RuntimeError("")
             else:
                 idxes = top_k_idxes(self.module, min_keep_ratio)
+
+        if channel_rounding == ChannelRounding.EIGHT:
+            k = ceil(len(idxes), 8)
+            if k != len(idxes):
+                print(f"{self.name} channel round up: {len(idxes)} -> {k}")
+            idxes = top_k_idxes(self.module, k=k)
+        elif channel_rounding == ChannelRounding.TWO_POW:
+            k = round_up_to_power_of_2(len(idxes))
+            if k != len(idxes):
+                print(f"{self.name} channel round up: {len(idxes)} -> {k}")
+            idxes = top_k_idxes(self.module, k=k)
 
         self.keep_idxes = idxes
 
@@ -174,6 +198,7 @@ class SlimPruner:
                     schema = json.loads(f.read())
 
             self._add_prefix_to_config_name(schema)
+            self.channel_rounding = schema.get("channel_rounding", "none")
 
             modules = {}
             for it in schema["modules"]:
@@ -236,7 +261,11 @@ class SlimPruner:
 
         bn2d_prune_info = []
         for name, bn2d in self.bn2d_modules.items():
-            bn2d.cal_keep_idxes(threshold, min_keep_ratio=0.02)
+            bn2d.cal_keep_idxes(
+                threshold,
+                min_keep_ratio=0.02,
+                channel_rounding=ChannelRounding(self.channel_rounding),
+            )
 
         self._apply_fix_bn_ratio()
 
@@ -303,7 +332,6 @@ class SlimPruner:
         for name, module in self.pruned_model.named_modules():
             if name not in info:
                 continue
-
             if isinstance(module, Conv2d):
                 prune_conv2d(
                     module,

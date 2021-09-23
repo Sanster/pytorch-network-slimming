@@ -1,4 +1,5 @@
 import copy
+import math
 from typing import List
 
 import torch
@@ -151,8 +152,35 @@ def mask2idxes(mask):
     return idxes
 
 
-def top_k_idxes(module, ratio):
+def top_k_idxes(module, ratio: float = None, k: int = None):
+    if k is not None:
+        assert k > 0
+    assert ratio is not None or k is not None
+    assert not (ratio is None and k is None)
+
     weights = module.weight.data.abs().clone()
-    k = max(int(weights.shape[0] * ratio), 2)
+
+    if ratio is not None:
+        k = max(int(weights.shape[0] * ratio), 2)
+
     idxes = torch.topk(weights.view(-1), k, largest=True)[1]
     return idxes.cpu().numpy()
+
+
+def ceil(num: int, val: int) -> int:
+    # c++ version: num + (val-1) & ~(val-1)
+    return int(math.ceil(num / val) * val)
+
+
+def round_up_to_power_of_2(num: int) -> int:
+    # leetcode 231
+    n = num - 1
+    n |= n >> 1
+    n |= n >> 2
+    n |= n >> 4
+    n |= n >> 8
+    n |= n >> 16
+    if n < 0:
+        return 1
+    else:
+        return n + 1
