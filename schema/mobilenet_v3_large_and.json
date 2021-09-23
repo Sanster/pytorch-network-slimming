@@ -1,0 +1,480 @@
+{
+  "modules": [
+    {
+      "name": "features.0.0",
+      "prev_bn": "",
+      "next_bn": "features.0.1"
+    },
+    {
+      "name": "features.1.block.0.0",
+      "prev_bn": "features.0.1",
+      "next_bn": "features.1.block.0.1"
+    },
+    {
+      "name": "features.1.block.1.0",
+      "prev_bn": "features.1.block.0.1",
+      "next_bn": "features.1.block.1.1"
+    },
+    {
+      "name": "features.2.block.0.0",
+      "prev_bn": "features.1.block.1.1",
+      "next_bn": "features.2.block.0.1"
+    },
+    {
+      "name": "features.2.block.1.0",
+      "prev_bn": "features.2.block.0.1",
+      "next_bn": "features.2.block.1.1"
+    },
+    {
+      "name": "features.2.block.2.0",
+      "prev_bn": "features.2.block.1.1",
+      "next_bn": "features.2.block.2.1"
+    },
+    {
+      "name": "features.3.block.0.0",
+      "prev_bn": "features.2.block.2.1",
+      "next_bn": "features.3.block.0.1"
+    },
+    {
+      "name": "features.3.block.1.0",
+      "prev_bn": "features.3.block.0.1",
+      "next_bn": "features.3.block.1.1"
+    },
+    {
+      "name": "features.3.block.2.0",
+      "prev_bn": "features.3.block.1.1",
+      "next_bn": "features.3.block.2.1"
+    },
+    {
+      "name": "features.4.block.0.0",
+      "prev_bn": "features.3.block.2.1",
+      "next_bn": "features.4.block.0.1"
+    },
+    {
+      "name": "features.4.block.1.0",
+      "prev_bn": "features.4.block.0.1",
+      "next_bn": "features.4.block.1.1"
+    },
+    {
+      "name": "features.4.block.2.fc1",
+      "prev_bn": "features.4.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.4.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.4.block.1.1"
+    },
+    {
+      "name": "features.4.block.3.0",
+      "prev_bn": "features.4.block.1.1",
+      "next_bn": "features.4.block.3.1"
+    },
+    {
+      "name": "features.5.block.0.0",
+      "prev_bn": "features.4.block.3.1",
+      "next_bn": "features.5.block.0.1"
+    },
+    {
+      "name": "features.5.block.1.0",
+      "prev_bn": "features.5.block.0.1",
+      "next_bn": "features.5.block.1.1"
+    },
+    {
+      "name": "features.5.block.2.fc1",
+      "prev_bn": "features.5.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.5.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.5.block.1.1"
+    },
+    {
+      "name": "features.5.block.3.0",
+      "prev_bn": "features.5.block.1.1",
+      "next_bn": "features.5.block.3.1"
+    },
+    {
+      "name": "features.6.block.0.0",
+      "prev_bn": "features.5.block.3.1",
+      "next_bn": "features.6.block.0.1"
+    },
+    {
+      "name": "features.6.block.1.0",
+      "prev_bn": "features.6.block.0.1",
+      "next_bn": "features.6.block.1.1"
+    },
+    {
+      "name": "features.6.block.2.fc1",
+      "prev_bn": "features.6.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.6.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.6.block.1.1"
+    },
+    {
+      "name": "features.6.block.3.0",
+      "prev_bn": "features.6.block.1.1",
+      "next_bn": "features.6.block.3.1"
+    },
+    {
+      "name": "features.7.block.0.0",
+      "prev_bn": "features.6.block.3.1",
+      "next_bn": "features.7.block.0.1"
+    },
+    {
+      "name": "features.7.block.1.0",
+      "prev_bn": "features.7.block.0.1",
+      "next_bn": "features.7.block.1.1"
+    },
+    {
+      "name": "features.7.block.2.0",
+      "prev_bn": "features.7.block.1.1",
+      "next_bn": "features.7.block.2.1"
+    },
+    {
+      "name": "features.8.block.0.0",
+      "prev_bn": "features.7.block.2.1",
+      "next_bn": "features.8.block.0.1"
+    },
+    {
+      "name": "features.8.block.1.0",
+      "prev_bn": "features.8.block.0.1",
+      "next_bn": "features.8.block.1.1"
+    },
+    {
+      "name": "features.8.block.2.0",
+      "prev_bn": "features.8.block.1.1",
+      "next_bn": "features.8.block.2.1"
+    },
+    {
+      "name": "features.9.block.0.0",
+      "prev_bn": "features.8.block.2.1",
+      "next_bn": "features.9.block.0.1"
+    },
+    {
+      "name": "features.9.block.1.0",
+      "prev_bn": "features.9.block.0.1",
+      "next_bn": "features.9.block.1.1"
+    },
+    {
+      "name": "features.9.block.2.0",
+      "prev_bn": "features.9.block.1.1",
+      "next_bn": "features.9.block.2.1"
+    },
+    {
+      "name": "features.10.block.0.0",
+      "prev_bn": "features.9.block.2.1",
+      "next_bn": "features.10.block.0.1"
+    },
+    {
+      "name": "features.10.block.1.0",
+      "prev_bn": "features.10.block.0.1",
+      "next_bn": "features.10.block.1.1"
+    },
+    {
+      "name": "features.10.block.2.0",
+      "prev_bn": "features.10.block.1.1",
+      "next_bn": "features.10.block.2.1"
+    },
+    {
+      "name": "features.11.block.0.0",
+      "prev_bn": "features.10.block.2.1",
+      "next_bn": "features.11.block.0.1"
+    },
+    {
+      "name": "features.11.block.1.0",
+      "prev_bn": "features.11.block.0.1",
+      "next_bn": "features.11.block.1.1"
+    },
+    {
+      "name": "features.11.block.2.fc1",
+      "prev_bn": "features.11.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.11.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.11.block.1.1"
+    },
+    {
+      "name": "features.11.block.3.0",
+      "prev_bn": "features.11.block.1.1",
+      "next_bn": "features.11.block.3.1"
+    },
+    {
+      "name": "features.12.block.0.0",
+      "prev_bn": "features.11.block.3.1",
+      "next_bn": "features.12.block.0.1"
+    },
+    {
+      "name": "features.12.block.1.0",
+      "prev_bn": "features.12.block.0.1",
+      "next_bn": "features.12.block.1.1"
+    },
+    {
+      "name": "features.12.block.2.fc1",
+      "prev_bn": "features.12.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.12.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.12.block.1.1"
+    },
+    {
+      "name": "features.12.block.3.0",
+      "prev_bn": "features.12.block.1.1",
+      "next_bn": "features.12.block.3.1"
+    },
+    {
+      "name": "features.13.block.0.0",
+      "prev_bn": "features.12.block.3.1",
+      "next_bn": "features.13.block.0.1"
+    },
+    {
+      "name": "features.13.block.1.0",
+      "prev_bn": "features.13.block.0.1",
+      "next_bn": "features.13.block.1.1"
+    },
+    {
+      "name": "features.13.block.2.fc1",
+      "prev_bn": "features.13.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.13.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.13.block.1.1"
+    },
+    {
+      "name": "features.13.block.3.0",
+      "prev_bn": "features.13.block.1.1",
+      "next_bn": "features.13.block.3.1"
+    },
+    {
+      "name": "features.14.block.0.0",
+      "prev_bn": "features.13.block.3.1",
+      "next_bn": "features.14.block.0.1"
+    },
+    {
+      "name": "features.14.block.1.0",
+      "prev_bn": "features.14.block.0.1",
+      "next_bn": "features.14.block.1.1"
+    },
+    {
+      "name": "features.14.block.2.fc1",
+      "prev_bn": "features.14.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.14.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.14.block.1.1"
+    },
+    {
+      "name": "features.14.block.3.0",
+      "prev_bn": "features.14.block.1.1",
+      "next_bn": "features.14.block.3.1"
+    },
+    {
+      "name": "features.15.block.0.0",
+      "prev_bn": "features.14.block.3.1",
+      "next_bn": "features.15.block.0.1"
+    },
+    {
+      "name": "features.15.block.1.0",
+      "prev_bn": "features.15.block.0.1",
+      "next_bn": "features.15.block.1.1"
+    },
+    {
+      "name": "features.15.block.2.fc1",
+      "prev_bn": "features.15.block.1.1",
+      "next_bn": ""
+    },
+    {
+      "name": "features.15.block.2.fc2",
+      "prev_bn": "",
+      "next_bn": "features.15.block.1.1"
+    },
+    {
+      "name": "features.15.block.3.0",
+      "prev_bn": "features.15.block.1.1",
+      "next_bn": "features.15.block.3.1"
+    },
+    {
+      "name": "features.16.0",
+      "prev_bn": "features.15.block.3.1",
+      "next_bn": "features.16.1"
+    },
+    {
+      "name": "classifier.0",
+      "prev_bn": "features.16.1",
+      "next_bn": ""
+    },
+    {
+      "name": "classifier.3",
+      "prev_bn": "",
+      "next_bn": ""
+    }
+  ],
+  "shortcuts": [
+    {
+      "names": [
+        "features.0.1",
+        "features.1.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.2.block.2.1",
+        "features.3.block.2.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.4.block.3.1",
+        "features.5.block.3.1",
+        "features.6.block.3.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.10.block.2.1",
+        "features.7.block.2.1",
+        "features.8.block.2.1",
+        "features.9.block.2.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.11.block.3.1",
+        "features.12.block.3.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.13.block.3.1",
+        "features.14.block.3.1",
+        "features.15.block.3.1"
+      ],
+      "method": "and"
+    }
+  ],
+  "depthwise_conv_adjacent_bn": [
+    {
+      "names": [
+        "features.0.1",
+        "features.1.block.0.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.2.block.0.1",
+        "features.2.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.3.block.0.1",
+        "features.3.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.4.block.0.1",
+        "features.4.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.5.block.0.1",
+        "features.5.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.6.block.0.1",
+        "features.6.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.7.block.0.1",
+        "features.7.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.8.block.0.1",
+        "features.8.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.9.block.0.1",
+        "features.9.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.10.block.0.1",
+        "features.10.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.11.block.0.1",
+        "features.11.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.12.block.0.1",
+        "features.12.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.13.block.0.1",
+        "features.13.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.14.block.0.1",
+        "features.14.block.1.1"
+      ],
+      "method": "and"
+    },
+    {
+      "names": [
+        "features.15.block.0.1",
+        "features.15.block.1.1"
+      ],
+      "method": "and"
+    }
+  ],
+  "prefix": "model."
+}

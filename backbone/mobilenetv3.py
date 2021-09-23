@@ -56,6 +56,19 @@ model_urls = {
 }
 
 
+def hardsigmoid(x, inplace: bool = False, scale=1.0):
+    if scale == 1:
+        if inplace:
+            return x.add_(3.0).clamp_(0.0, 6.0).div_(6.0)
+        else:
+            return F.relu6(x + 3.0) / 6.0
+    else:
+        if inplace:
+            return (1.2 * x).add_(3.0).clamp_(0.0, 6.0).div_(6.0)
+        else:
+            return F.relu6(1.2 * x + 3.0) / 6.0
+
+
 class SqueezeExcitation(nn.Module):
     def __init__(self, input_channels: int, squeeze_factor: int = 4):
         super().__init__()
@@ -69,7 +82,7 @@ class SqueezeExcitation(nn.Module):
         scale = self.fc1(scale)
         scale = self.relu(scale)
         scale = self.fc2(scale)
-        return F.hardsigmoid(scale, inplace=inplace)
+        return hardsigmoid(scale, inplace=inplace)
 
     def forward(self, input: Tensor) -> Tensor:
         scale = self._scale(input, True)
@@ -103,6 +116,16 @@ class InvertedResidualConfig:
         return _make_divisible(channels * width_mult, 8)
 
 
+class Hardswish(nn.Module):
+    def __init__(self, inplace=False):
+        super().__init__()
+        self.inplace = inplace
+
+    def forward(self, x):
+        out = x * F.relu6(x + 3, inplace=self.inplace) / 6
+        return out
+
+
 class InvertedResidual(nn.Module):
     def __init__(
         self,
@@ -119,7 +142,7 @@ class InvertedResidual(nn.Module):
         )
 
         layers: List[nn.Module] = []
-        activation_layer = nn.Hardswish if cnf.use_hs else nn.ReLU
+        activation_layer = Hardswish if cnf.use_hs else nn.ReLU
 
         # expand
         if cnf.expanded_channels != cnf.input_channels:
@@ -226,7 +249,7 @@ class MobileNetV3(nn.Module):
                 kernel_size=3,
                 stride=1,
                 norm_layer=norm_layer,
-                activation_layer=nn.Hardswish,
+                activation_layer=Hardswish,
             )
         )
 
@@ -243,7 +266,7 @@ class MobileNetV3(nn.Module):
                 lastconv_output_channels,
                 kernel_size=1,
                 norm_layer=norm_layer,
-                activation_layer=nn.Hardswish,
+                activation_layer=Hardswish,
             )
         )
 
@@ -251,7 +274,7 @@ class MobileNetV3(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d(1)
         self.classifier = nn.Sequential(
             nn.Linear(lastconv_output_channels, last_channel),
-            nn.Hardswish(inplace=True),
+            Hardswish(inplace=True),
             nn.Dropout(p=0.2, inplace=True),
             nn.Linear(last_channel, num_classes),
         )
