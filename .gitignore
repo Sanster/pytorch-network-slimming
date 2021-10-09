@@ -5,3 +5,4 @@ __pycache__
 datasets
 output
 */*.egg-info
+venv/
