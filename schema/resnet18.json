@@ -1,5 +1,4 @@
 {
-  "prefix": "model.",
   "modules": [
     {
       "name": "conv1",
@@ -140,5 +139,7 @@
       ],
       "method": "or"
     }
-  ]
+  ],
+  "depthwise_conv_adjacent_bn": [],
+  "prefix": ""
 }
