@@ -326,8 +326,13 @@ def track_cat(ctx: TrackContext):
         if name is None:
             continue
 
+        if len(name) == 0:
+            continue
+
         if isinstance(name, list):
-            input_names.extend(name)
+            # TODO: why 0??
+            # Works for YOLOX
+            input_names.append(name[0])
             if tuple(name) in ctx.cat_group:
                 ctx.cat_group.remove(tuple(name))
         else:

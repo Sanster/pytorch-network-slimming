@@ -344,7 +344,7 @@ class SlimPruner:
         print(df.to_markdown() + "\n")
 
         df = pd.DataFrame(cat_conv_prune_info)
-        print("\nConv2d after prune info")
+        print("\nConv2d after cat prune info")
         print(df.to_markdown() + "\n")
 
         fc_prune_info = []
