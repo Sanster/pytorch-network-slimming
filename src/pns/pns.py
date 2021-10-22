@@ -4,6 +4,7 @@ from enum import Enum
 from functools import reduce
 from itertools import chain
 from typing import Dict, List
+from loguru import logger
 
 import pandas as pd
 from torch.nn import Conv2d, BatchNorm2d, Linear
@@ -47,10 +48,14 @@ class Conv2dWrapper:
         if next_bn is not None:
             assert next_bn.is_pruned
 
-        self.in_channels_keep_idxes, self.out_channels_keep_idxes = prune_conv2d(
-            self.pruned_module,
+        self.prune_by_idxes(
             prev_bn.keep_idxes if prev_bn else None,
             next_bn.keep_idxes if next_bn else None,
+        )
+
+    def prune_by_idxes(self, prev_bn_keep_idxes=None, next_bn_keep_idxes=None):
+        self.in_channels_keep_idxes, self.out_channels_keep_idxes = prune_conv2d(
+            self.pruned_module, prev_bn_keep_idxes, next_bn_keep_idxes
         )
 
         self.is_pruned = True
@@ -207,6 +212,7 @@ class SlimPruner:
             self.conv2d_modules = {}
             self.bn2d_modules = {}
             self.fc_modules = {}
+            self.cats = schema.get("cats", [])
             self.shortcuts = schema.get("shortcuts", [])
             self.depthwise_conv_adjacent_bn = schema.get(
                 "depthwise_conv_adjacent_bn", []
@@ -251,6 +257,18 @@ class SlimPruner:
         """
         for it in config.get("shortcuts", []):
             it["names"] = [prefix + _ for _ in it["names"]]
+
+        """
+        "cats": [
+            {
+                "names": [ "bn1", "bn2"],
+            }
+        ]
+        """
+        for it in config.get("cats", []):
+            it["input_bn_names"] = [prefix + _ for _ in it["input_bn_names"]]
+            it["output_conv_names"] = [prefix + _ for _ in it["output_conv_names"]]
+
         for it in config.get("depthwise_conv_adjacent_bn", []):
             it["names"] = [prefix + _ for _ in it["names"]]
 
@@ -302,15 +320,31 @@ class SlimPruner:
         print("\nBatchNorm2d prune info")
         print(df.to_markdown() + "\n")
 
+        convs_after_cat = self._collect_conv_after_cat()
         conv2d_prune_info = []
+        # fmt: off
         for conv2d in self.conv2d_modules.values():
-            conv2d.prune(
-                self.bn2d_modules[conv2d.prev_bn_name] if conv2d.prev_bn_name else None,
-                self.bn2d_modules[conv2d.next_bn_name] if conv2d.next_bn_name else None,
-            )
+            if conv2d.name in convs_after_cat:
+                conv2d.prune(
+                    None,
+                    self.bn2d_modules[conv2d.next_bn_name] if conv2d.next_bn_name else None,
+                )
+            else:
+                conv2d.prune(
+                    self.bn2d_modules[conv2d.prev_bn_name] if conv2d.prev_bn_name else None,
+                    self.bn2d_modules[conv2d.next_bn_name] if conv2d.next_bn_name else None,
+                )
             conv2d_prune_info.append(conv2d.prune_info())
+        # fmt: on
+
+        cat_conv_prune_info = self._prune_cat_conv_prev_bn()
+
         df = pd.DataFrame(conv2d_prune_info)
         print("\nConv2d prune info")
+        print(df.to_markdown() + "\n")
+
+        df = pd.DataFrame(cat_conv_prune_info)
+        print("\nConv2d after prune info")
         print(df.to_markdown() + "\n")
 
         fc_prune_info = []
@@ -356,16 +390,6 @@ class SlimPruner:
 
         # return {self.PRUNING_RESULT_KEY: prune_result}
         return prune_result
-
-    def _merge_depthwise_conv2d_adjacent_bn(self):
-        self._align_bns(
-            self.depthwise_conv_adjacent_bn,
-            min_keep_ratio=0.05,
-            log_name="depthwise conv bn",
-        )
-
-    def _merge_shortcuts(self):
-        self._align_bns(self.shortcuts, min_keep_ratio=0.05, log_name="shortcuts")
 
     def _align_bns(self, bn_groups, min_keep_ratio: float, log_name: str):
         """
@@ -430,3 +454,56 @@ class SlimPruner:
             for _name in name:
                 if _name in self.bn2d_modules:
                     self.bn2d_modules[_name].set_fixed_ratio(1 - ratio)
+
+    def _collect_conv_after_cat(self) -> List[str]:
+        if not self.cats:
+            return []
+
+        res = []
+        for cat_group in self.cats:
+            output_conv_names = cat_group["output_conv_names"]
+            for conv_name in output_conv_names:
+                if conv_name not in self.conv2d_modules:
+                    raise RuntimeError(
+                        f"{conv_name} not exist in {self.conv2d_modules.keys()}"
+                    )
+            res.extend(output_conv_names)
+        return res
+
+    def _prune_cat_conv_prev_bn(self) -> List[Dict]:
+        if not self.cats:
+            return []
+
+        conv2d_prune_info = []
+
+        # 1. 收集 bn2d_modules 的 keep indexes，cat 起来
+        # 2. 剪后续卷积的 kernel
+        for cat_group in self.cats:
+            input_bn_names = cat_group["input_bn_names"]
+            output_conv_names = cat_group["output_conv_names"]
+
+            final_bn_keep_idxes = []
+            idx_offset = 0
+            for bn_name in input_bn_names:
+                bn_module = self.bn2d_modules.get(bn_name, None)
+                if bn_module is None:
+                    raise RuntimeError(
+                        f"{bn_name} not exist in {self.bn2d_modules.keys()}"
+                    )
+
+                keep_idxes_offset = [it + idx_offset for it in bn_module.keep_idxes]
+                final_bn_keep_idxes.extend(keep_idxes_offset)
+                idx_offset += bn_module.in_channels()
+
+            for conv_name in output_conv_names:
+                if conv_name not in self.conv2d_modules:
+                    raise RuntimeError(
+                        f"{conv_name} not exist in {self.conv2d_modules.keys()}"
+                    )
+
+                self.conv2d_modules[conv_name].prune_by_idxes(
+                    prev_bn_keep_idxes=final_bn_keep_idxes
+                )
+                conv2d_prune_info.append(self.conv2d_modules[conv_name].prune_info())
+
+        return conv2d_prune_info

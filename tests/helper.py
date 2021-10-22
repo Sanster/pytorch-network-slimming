@@ -9,6 +9,8 @@ from pns.tracker import gen_pruning_schema
 
 def check_gen_schema(model, net: str = ""):
     x = torch.Tensor(1, 3, 224, 224)
+    y = model(x)
+    print(f"model ouput shape: {y.shape}")
     config = gen_pruning_schema(model, x)
 
     if "mobilenet_v3_large" in net and "nose" not in net:
