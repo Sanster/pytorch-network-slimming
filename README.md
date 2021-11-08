@@ -12,6 +12,9 @@ This repository contains tools to make implement
 - [x] Channels round up to 8x (for train/infer speed) (TODO: handle shortcuts channels round up)
 - [ ] Layer pruning
 
+Supported project:
+- [YOLOX](https://github.com/Sanster/YOLOX-Slim)
+
 Supported model arches:
 - ResNet
 - RepVGG
