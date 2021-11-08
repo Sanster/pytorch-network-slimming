@@ -1,3 +1,4 @@
+import copy
 import typing
 from collections import defaultdict
 from typing import Callable, Dict, List
@@ -122,6 +123,7 @@ class TrackContext:
         self.module_output_names = defaultdict(list)
 
         self.shortcuts_group = []
+        self.cat_group = []
 
     def __enter__(self):
         for hook in self.hooks:
@@ -141,6 +143,9 @@ class ModuleWrapper:
     def is_bn(self):
         return isinstance(self.module, torch.nn.BatchNorm2d)
 
+    def is_cat(self):
+        pass
+
     def is_conv(self):
         return isinstance(self.module, torch.nn.Conv2d)
 
@@ -150,7 +155,7 @@ class ModuleWrapper:
 
 def BFS_find_bn(
     module_names: Dict[str, List], wrappers: Dict[str, ModuleWrapper], name: str
-):
+) -> str:
     output_names = module_names[name]
     while len(output_names) != 0:
         output_name = output_names.pop(0)
@@ -308,6 +313,36 @@ def track_add(ctx: TrackContext):
         set_outputs_name_attr(outputs, input_names)
 
 
+@register_tracker("torch.cat")
+def track_cat(ctx: TrackContext):
+    inputs = ctx.method_args
+    outputs = ctx.method_return
+    if len(inputs) == 0:
+        return
+
+    input_names = []
+    for input in inputs[0]:
+        name = getattr(input, TRACK_ATTR_NAME, None)
+        if name is None:
+            continue
+
+        if len(name) == 0:
+            continue
+
+        if isinstance(name, list):
+            # TODO: why 0??
+            # Works for YOLOX
+            input_names.append(name[0])
+            if tuple(name) in ctx.cat_group:
+                ctx.cat_group.remove(tuple(name))
+        else:
+            input_names.append(name)
+
+    if len(input_names) > 1:
+        ctx.cat_group.append(tuple(input_names))
+        set_outputs_name_attr(outputs, input_names)
+
+
 def gen_pruning_schema(model, *args, **kwargs):
     with TrackContext() as ctx:
         bn_names = []
@@ -334,13 +369,22 @@ def gen_pruning_schema(model, *args, **kwargs):
             if name in common_names:
                 target_wrappers[name] = ModuleWrapper(name, module)
 
-        info = {"modules": [], "shortcuts": [], "depthwise_conv_adjacent_bn": []}
+        info = {
+            "modules": [],
+            "shortcuts": [],
+            "cats": [],
+            "depthwise_conv_adjacent_bn": [],
+        }
+
+        module_input_names = copy.deepcopy(ctx.module_input_names)
+        module_output_names = copy.deepcopy(ctx.module_output_names)
         for name, wrapper in target_wrappers.items():
             if not (wrapper.is_conv() or wrapper.is_fc()):
                 continue
 
-            prev_bn = BFS_find_bn(ctx.module_input_names, target_wrappers, name)
-            next_bn = BFS_find_bn(ctx.module_output_names, target_wrappers, name)
+            # module_input_names will be consumed
+            prev_bn = BFS_find_bn(module_input_names, target_wrappers, name)
+            next_bn = BFS_find_bn(module_output_names, target_wrappers, name)
             m = {"name": name, "prev_bn": prev_bn, "next_bn": next_bn}
 
             info["modules"].append(m)
@@ -356,5 +400,33 @@ def gen_pruning_schema(model, *args, **kwargs):
             if len(shortcuts) <= 1:
                 continue
             info["shortcuts"].append({"names": sorted(shortcuts), "method": "or"})
+
+        for cat in ctx.cat_group:
+            cat = list(filter(lambda it: it in bn_names, cat))
+            if len(cat) <= 1:
+                continue
+            """
+            ctx.module_input_names:
+            {
+                "conv": ["bn1", "bn2"]
+            }
+            
+            cat: ['bn1', 'bn2']
+            
+            如果 module_input_names 中 conv 的值和 cat 的值一样，说明该 conv 是 cat 的输出
+            """
+            # cat 不能 sort，因为顺序会影响 channel index
+            cats = {"input_bn_names": cat, "output_conv_names": []}
+            for name, values in ctx.module_input_names.items():
+                if name not in target_wrappers:
+                    continue
+                if not target_wrappers[name].is_conv():
+                    continue
+
+                if values == cat:
+                    cats["output_conv_names"].append(name)
+
+            if len(cats["output_conv_names"]) != 0:
+                info["cats"].append(cats)
 
         return info

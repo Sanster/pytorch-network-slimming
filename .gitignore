@@ -6,3 +6,4 @@ datasets
 output
 */*.egg-info
 venv/
+test.json

@@ -2,6 +2,7 @@ import argparse
 import json
 
 import torch
+from pns.schema_post_process import mbv3_large_schema_post_process
 
 from backbone.build import build_model
 from pns import SlimPruner
@@ -47,20 +48,7 @@ if __name__ == "__main__":
         config["shortcuts"] = shortcuts
 
     if "mobilenet_v3_large" in args.net and "nose" not in args.net:
-        # BN in block with se module should have same channels
-        se_shortcuts = []
-        modules = []
-        for m in config["modules"]:
-            if m["name"].endswith("fc2"):
-                # e.g: features.5.block
-                feature_name = ".".join(m["name"].split(".")[:-2])
-                m["next_bn"] = f"{feature_name}.1.1"
-            elif m["name"].endswith("fc1"):
-                m["next_bn"] = ""
-
-            modules.append(m)
-        # config["shortcuts"].extend(se_shortcuts)
-        config["modules"] = modules
+        mbv3_large_schema_post_process(config)
 
     with open(args.save_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2, ensure_ascii=False)

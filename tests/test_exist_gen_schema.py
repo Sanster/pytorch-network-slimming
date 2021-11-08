@@ -11,7 +11,7 @@ from backbone.build import build_model
 
 def check_schema(net):
     model = build_model(net)
-    _check_schema(model)
+    _check_schema(model, net)
 
 
 def test_RepVGG_A0_woid():
@@ -59,11 +59,6 @@ def test_resnet50():
     check_schema(name)
 
 
-def test_resnet50():
-    name = "resnet50"
-    check_schema(name)
-
-
 def test_vgg11_bn():
     name = "vgg11_bn"
     check_schema(name)
@@ -71,4 +66,19 @@ def test_vgg11_bn():
 
 def test_mobilenet_v2():
     name = "mobilenet_v2"
+    check_schema(name)
+
+
+def test_mobilenet_v3():
+    name = "mobilenet_v3_large"
+    check_schema(name)
+
+
+def test_mobilenet_v3_large_nose():
+    name = "mobilenet_v3_large_nose"
+    check_schema(name)
+
+
+def test_mobilenet_v3_small_nose():
+    name = "mobilenet_v3_small_nose"
     check_schema(name)
