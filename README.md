@@ -29,6 +29,7 @@ Supported layers:
 - SqueezeExcitation(SE block)
 - Linear
 - BatchNorm2d
+- torch.cat
 
 ## Quick start on cifar10
 
