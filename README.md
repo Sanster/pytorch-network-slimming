@@ -1,7 +1,10 @@
 ## Pytorch Network Slimming
 
+TL;DR: Try mobilenetv3 first before you want to pruning a big model :)
+
 This repository contains tools to make implement
 [Learning Efficient Convolutional Networks Through Network Slimming](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html) on different backbones easier.
+
 
 ## Features
 
